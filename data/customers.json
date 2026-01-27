@@ -1,0 +1,101 @@
+[
+  {
+    "id": "C12345",
+    "name": "Ahmed Al Mansoori",
+    "nameAr": "أحمد المنصوري",
+    "email": "ahmed.mansoori@example.com",
+    "phone": "+971-50-123-4567",
+    "accountNumber": "DEWA-001-2345",
+    "address": "Dubai Marina, Tower A, Apt 1505",
+    "openComplaints": [
+      {
+        "ticketId": "T001",
+        "subject": "High electricity bill in December",
+        "subjectAr": "فاتورة كهرباء عالية في ديسمبر",
+        "status": "Open",
+        "createdAt": "2026-01-20T10:30:00Z",
+        "priority": "Medium"
+      },
+      {
+        "ticketId": "T002",
+        "subject": "Water meter reading discrepancy",
+        "subjectAr": "تناقض في قراءة عداد المياه",
+        "status": "Pending",
+        "createdAt": "2026-01-15T14:20:00Z",
+        "priority": "Low"
+      }
+    ],
+    "predictedBill": 845.50,
+    "lastBill": 780.30,
+    "consumptionHistory": [
+      { "month": "2025-08", "amount": 620.50 },
+      { "month": "2025-09", "amount": 650.20 },
+      { "month": "2025-10", "amount": 680.40 },
+      { "month": "2025-11", "amount": 720.10 },
+      { "month": "2025-12", "amount": 780.30 }
+    ],
+    "usagePatterns": {
+      "peakHours": "14:00-18:00",
+      "averageDaily": 28.5,
+      "highConsumptionReason": "AC usage during winter months"
+    }
+  },
+  {
+    "id": "C67890",
+    "name": "Fatima Hassan",
+    "nameAr": "فاطمة حسن",
+    "email": "fatima.hassan@example.com",
+    "phone": "+971-55-987-6543",
+    "accountNumber": "DEWA-002-6789",
+    "address": "Jumeirah Beach Residence, Building 5, Apt 802",
+    "openComplaints": [],
+    "predictedBill": 520.75,
+    "lastBill": 510.20,
+    "consumptionHistory": [
+      { "month": "2025-08", "amount": 480.30 },
+      { "month": "2025-09", "amount": 495.10 },
+      { "month": "2025-10", "amount": 505.50 },
+      { "month": "2025-11", "amount": 512.80 },
+      { "month": "2025-12", "amount": 510.20 }
+    ],
+    "usagePatterns": {
+      "peakHours": "19:00-23:00",
+      "averageDaily": 17.2,
+      "highConsumptionReason": null
+    }
+  },
+  {
+    "id": "C11223",
+    "name": "Mohammed Al Hashimi",
+    "nameAr": "محمد الهاشمي",
+    "email": "mohammed.hashimi@example.com",
+    "phone": "+971-52-456-7890",
+    "accountNumber": "DEWA-003-1122",
+    "address": "Downtown Dubai, Burj Vista, Apt 2301",
+    "openComplaints": [
+      {
+        "ticketId": "T003",
+        "subject": "Service outage notification",
+        "subjectAr": "إشعار انقطاع الخدمة",
+        "status": "Resolved",
+        "createdAt": "2026-01-10T08:15:00Z",
+        "resolvedAt": "2026-01-12T16:45:00Z",
+        "priority": "High"
+      }
+    ],
+    "predictedBill": 1250.00,
+    "lastBill": 1180.50,
+    "consumptionHistory": [
+      { "month": "2025-08", "amount": 1050.20 },
+      { "month": "2025-09", "amount": 1100.40 },
+      { "month": "2025-10", "amount": 1130.60 },
+      { "month": "2025-11", "amount": 1165.80 },
+      { "month": "2025-12", "amount": 1180.50 }
+    ],
+    "usagePatterns": {
+      "peakHours": "12:00-16:00",
+      "averageDaily": 39.5,
+      "highConsumptionReason": "Large villa with pool heating"
+    }
+  }
+]

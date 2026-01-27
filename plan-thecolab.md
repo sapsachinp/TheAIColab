@@ -1,0 +1,29 @@
+## Plan: Implement Humanized AI Customer Support for DEWA
+
+Build a complete AI-driven customer support platform with a centralized "Unified AI Brain" orchestrating intent detection, empathy responses, proactive guidance, and bill predictions. The system flows from customer interactions → AI processing → back-office copilot → analytics with continuous improvement feedback.
+
+### Steps
+
+1. **Project scaffolding with unified architecture**: Create folder structure matching diagram (`backend/`, `frontend/`, `data/`, `tests/`), initialize Node.js backend with Express/OpenAI, scaffold React frontend with Tailwind/Chakra UI, add [.gitignore](.gitignore), create [data/customers.json](data/customers.json) and [data/ai-logs.json](data/ai-logs.json), establish [backend/ai/unifiedBrain.js](backend/ai/unifiedBrain.js) as orchestration layer coordinating all AI modules.
+
+2. **Unified AI Brain - Core orchestration layer**: Implement [backend/ai/unifiedBrain.js](backend/ai/unifiedBrain.js) as central coordinator receiving all requests and routing to specialized agents, create [backend/ai/intentDetection.js](backend/ai/intentDetection.js) for classifying customer intent (billing/outage/service), build [backend/ai/empathyResponse.js](backend/ai/empathyResponse.js) for humanized replies, implement [backend/ai/proactiveAdvisor.js](backend/ai/proactiveAdvisor.js) for pre-submission guidance, develop [backend/ai/billPredictor.js](backend/ai/billPredictor.js) analyzing consumption patterns, add context analysis aggregating customer history before AI processing.
+
+3. **Customer Interaction Layer - Frontend components**: Build [frontend/src/components/Login.jsx](frontend/src/components/Login.jsx), create [frontend/src/components/CustomerSummary.jsx](frontend/src/components/CustomerSummary.jsx) displaying bill predictions and open tickets from Unified AI Brain, implement [frontend/src/components/ProactiveGuidance.jsx](frontend/src/components/ProactiveGuidance.jsx) showing alerts like "High Consumption Due to AC Usage" before ticket submission, develop [frontend/src/components/Chatbot.jsx](frontend/src/components/Chatbot.jsx) with STT/TTS for chat and IVR channels.
+
+4. **Backend API routes connecting to Unified AI Brain**: Create [backend/server.js](backend/server.js) with Express, implement [backend/routes/auth.js](backend/routes/auth.js) for `/api/login`, build [backend/routes/customer.js](backend/routes/customer.js) for `/api/customer-summary/:id` calling `unifiedBrain.getCustomerInsights()`, create [backend/routes/proactive.js](backend/routes/proactive.js) for `/api/proactive-guidance` routing through `unifiedBrain.analyzeRequest()`, implement [backend/routes/chatbot.js](backend/routes/chatbot.js) for `/api/analyze-query` using `unifiedBrain.processQuery()` with channel context.
+
+5. **Back-Office Copilot with human oversight**: Implement [backend/routes/backoffice.js](backend/routes/backoffice.js) for `/api/submit-ticket` creating tickets from AI-processed requests, build [backend/services/ticketClassifier.js](backend/services/ticketClassifier.js) categorizing by urgency/type, create [backend/services/solutionEngine.js](backend/services/solutionEngine.js) pre-filling resolution suggestions from resolved cases in [ai-logs.json](data/ai-logs.json), develop [frontend/src/components/BackOfficePanel.jsx](frontend/src/components/BackOfficePanel.jsx) showing AI recommendations with human approve/override buttons, log all human decisions to enable AI learning.
+
+6. **Analytics & Continuous Learning dashboard**: Build [frontend/src/components/Dashboard.jsx](frontend/src/components/Dashboard.jsx) with metrics from diagram (FCR Rate, Ticket Deflection, Bill Prediction vs Actual), implement [backend/services/analytics.js](backend/services/analytics.js) calculating metrics from [ai-logs.json](data/ai-logs.json) and resolved cases, create visualizations using Chart.js/Recharts matching diagram style (pie charts, line graphs, bar charts), establish continuous improvement feedback loop where analytics data updates AI model prompts in [unifiedBrain.js](backend/ai/unifiedBrain.js), track proactive guidance acceptance rate to refine advisor confidence thresholds.
+
+7. **Integration, testing, and deployment**: Write unit tests for `unifiedBrain.js` orchestration logic and individual AI modules, create integration tests for complete flow: Web/Mobile → Unified AI Brain → Back-Office → Analytics → Feedback Loop, test STT/TTS chatbot across channels (web chat, IVR simulation), validate proactive guidance alerts prevent unnecessary tickets, create [docker-compose.yml](docker-compose.yml) with frontend/backend/data volumes, update [README.md](README.md) with architecture diagram reference and API documentation.
+
+### Further Considerations
+
+1. **Unified AI Brain coordination strategy**: Should `unifiedBrain.js` execute AI modules sequentially (intent → empathy → proactive) or in parallel with final aggregation? Recommend parallel execution with weighted scoring for speed, especially for real-time chatbot responses.
+
+2. **Back-Office human override logging**: How granular should human decision tracking be for continuous learning? Track override reasons (AI wrong/incomplete/customer preference) to improve specific modules vs just binary approve/reject?
+
+3. **Continuous improvement automation**: Should the feedback loop automatically update AI prompts/thresholds, or require manual review before deploying changes? Suggest automated A/B testing for low-risk changes (empathy tone) and manual approval for high-risk (ticket classification logic).
+
+4. **Bilingual support for DEWA context**: Implement Arabic language detection in intent module and bilingual responses in empathy engine? Add language toggle in [CustomerSummary.jsx](frontend/src/components/CustomerSummary.jsx) and [Chatbot.jsx](frontend/src/components/Chatbot.jsx) with Arabic sample data in [customers.json](data/customers.json)?
