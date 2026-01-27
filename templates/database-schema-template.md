@@ -319,12 +319,19 @@ CREATE FULLTEXT INDEX idx_posts_content_fulltext ON posts(title, content);
 
 ### 6.2 Naming Conventions
 
-- **Tables/Collections:** Plural, lowercase, snake_case (e.g., `users`, `blog_posts`)
-- **Columns/Fields:** Lowercase, snake_case (e.g., `first_name`, `created_at`)
+**For SQL Databases:**
+- **Tables:** Plural, lowercase, snake_case (e.g., `users`, `blog_posts`)
+- **Columns:** Lowercase, snake_case (e.g., `first_name`, `created_at`)
 - **Primary Keys:** `id`
 - **Foreign Keys:** `{table}_id` (e.g., `user_id`)
 - **Indexes:** `idx_{table}_{columns}` (e.g., `idx_users_email`)
 - **Constraints:** `chk_{table}_{description}` (e.g., `chk_users_role`)
+
+**For NoSQL Databases (MongoDB):**
+- **Collections:** Plural, lowercase, camelCase (e.g., `users`, `blogPosts`)
+- **Fields:** camelCase (e.g., `firstName`, `createdAt`)
+- **Primary Keys:** `_id` (MongoDB default)
+- **Indexes:** Descriptive names (e.g., `email_unique`, `created_date`)
 
 ### 6.3 Standard Columns
 

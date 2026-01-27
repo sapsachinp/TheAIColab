@@ -27,13 +27,13 @@
 ## 2. Authentication
 
 ### 2.1 Authentication Method
-[Specify the authentication method used.]
+[Specify the authentication method used. Choose one:]
 
-- [ ] API Key
-- [ ] OAuth 2.0
-- [ ] JWT (JSON Web Token)
-- [ ] Basic Authentication
-- [ ] No Authentication
+- API Key
+- OAuth 2.0
+- JWT (JSON Web Token)
+- Basic Authentication
+- No Authentication
 
 ### 2.2 Authentication Details
 
