@@ -2,8 +2,41 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import axios from 'axios'
+import {
+  Box,
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Avatar,
+  LinearProgress,
+  Stack,
+  IconButton,
+  Divider,
+  Paper
+} from '@mui/material'
+import {
+  TrendingUp,
+  TrendingDown,
+  Psychology,
+  Speed,
+  CheckCircle,
+  Warning,
+  Error as ErrorIcon,
+  AutoAwesome,
+  Insights,
+  Analytics,
+  SmartToy,
+  Support,
+  ThumbUp,
+  Schedule,
+  ArrowUpward,
+  ArrowDownward
+} from '@mui/icons-material'
 
-const COLORS = ['#00A651', '#0072BC', '#FFA500', '#FF6B6B']
+const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
 
 export default function Dashboard() {
   const [analytics, setAnalytics] = useState(null)
@@ -33,12 +66,23 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-dewa-green mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading analytics...</p>
-        </div>
-      </div>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          minHeight: 'calc(100vh - 80px)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+        }}
+      >
+        <Card sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+          <SmartToy sx={{ fontSize: 64, color: 'primary.main', mb: 2 }} />
+          <Typography variant="h6" gutterBottom>
+            Analyzing AI Performance...
+          </Typography>
+          <LinearProgress sx={{ mt: 2, width: 200 }} />
+        </Card>
+      </Box>
     )
   }
 
@@ -54,255 +98,579 @@ export default function Dashboard() {
     { name: 'Satisfaction', value: analytics?.avgSatisfaction * 20 || 0, target: 80 }
   ]
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="container mx-auto px-6 py-8 max-w-7xl">
-        {/* Navigation */}
-        <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
-          <Link
-            to="/summary"
-            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
-          >
-            Summary
-          </Link>
-          <Link
-            to="/request"
-            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
-          >
-            New Request
-          </Link>
-          <Link
-            to="/chat"
-            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
-          >
-            Chat Support
-          </Link>
-          <Link
-            to="/dashboard"
-            className="px-5 py-2.5 bg-gradient-to-r from-dewa-green to-green-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap"
-          >
-            Analytics
-          </Link>
-        </div>
+  // Helper function to determine status and color
+  const getStatusInfo = (value, target) => {
+    const percentage = (value / target) * 100
+    if (percentage >= 100) return { status: 'excellent', color: 'success', icon: <CheckCircle /> }
+    if (percentage >= 80) return { status: 'good', color: 'info', icon: <TrendingUp /> }
+    if (percentage >= 60) return { status: 'warning', color: 'warning', icon: <Warning /> }
+    return { status: 'needs attention', color: 'error', icon: <ErrorIcon /> }
+  }
 
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight">Analytics & Insights</h1>
-          <p className="text-lg text-gray-600">Real-time insights from AI-powered customer interactions</p>
-        </div>
+  // Calculate trends (mock data - replace with actual historical comparison)
+  const getTrendIndicator = (value, isPositive = true) => {
+    const trend = Math.random() > 0.5 ? 'up' : 'down'
+    const change = (Math.random() * 15).toFixed(1)
+    const isGoodTrend = isPositive ? trend === 'up' : trend === 'down'
+    
+    return {
+      trend,
+      change,
+      isGood: isGoodTrend,
+      icon: trend === 'up' ? <ArrowUpward fontSize="small" /> : <ArrowDownward fontSize="small" />
+    }
+  }
+
+  return (
+    <Box sx={{ 
+      minHeight: '100vh', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      py: 4
+    }}>
+      <Container maxWidth="xl">
+        {/* Navigation */}
+        <Stack direction="row" spacing={2} sx={{ mb: 4, flexWrap: 'wrap', gap: 1 }}>
+          <Chip
+            component={Link}
+            to="/summary"
+            label="Summary"
+            clickable
+            sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
+          />
+          <Chip
+            component={Link}
+            to="/request"
+            label="New Request"
+            clickable
+            sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
+          />
+          <Chip
+            component={Link}
+            to="/chat"
+            label="Chat Support"
+            clickable
+            sx={{ bgcolor: 'white', '&:hover': { bgcolor: 'grey.100' } }}
+          />
+          <Chip
+            component={Link}
+            to="/dashboard"
+            label="Analytics"
+            clickable
+            color="primary"
+            sx={{ 
+              bgcolor: 'primary.main', 
+              color: 'white',
+              fontWeight: 600,
+              '&:hover': { bgcolor: 'primary.dark' }
+            }}
+          />
+        </Stack>
+
+        {/* Header with AI Indicator */}
+        <Paper 
+          elevation={0}
+          sx={{ 
+            p: 3, 
+            mb: 4, 
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 3
+          }}
+        >
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
+              <Analytics fontSize="large" />
+            </Avatar>
+            <Box sx={{ flex: 1 }}>
+              <Typography variant="h3" fontWeight="bold" gutterBottom>
+                AI Analytics Dashboard
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Real-time insights from AI-powered customer interactions
+              </Typography>
+            </Box>
+            <Chip 
+              icon={<AutoAwesome />}
+              label="Live" 
+              color="success" 
+              sx={{ animation: 'pulse 2s infinite' }}
+            />
+          </Stack>
+        </Paper>
 
         {/* DEWA Savings Section - Prominent Display */}
         {analytics?.savings && (
-          <div className="bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 text-white rounded-3xl shadow-xl p-10 mb-10">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold mb-3 flex items-center gap-3">
-                  <span>💰</span> Cost Savings Impact
-                </h2>
-                <p className="text-green-50 text-lg">Financial benefits of AI-powered support</p>
-              </div>
-              <div className="bg-white/25 backdrop-blur-md rounded-2xl p-6 border border-white/30">
-                <p className="text-sm text-green-50 mb-2">Savings Rate</p>
-                <p className="text-4xl font-bold">{analytics.savings.savingsPercentage}%</p>
-              </div>
-            </div>
+          <Card 
+            elevation={3}
+            sx={{ 
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              borderRadius: 4,
+              mb: 4,
+              overflow: 'hidden'
+            }}
+          >
+            <CardContent sx={{ p: 4 }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
+                <Box>
+                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+                    <Typography variant="h4" fontWeight="bold">
+                      💰 Cost Savings Impact
+                    </Typography>
+                    <Chip 
+                      icon={<TrendingUp />}
+                      label="Optimized" 
+                      size="small"
+                      sx={{ bgcolor: 'rgba(255,255,255,0.3)', color: 'white' }}
+                    />
+                  </Stack>
+                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                    Financial benefits of AI-powered support
+                  </Typography>
+                </Box>
+                <Paper 
+                  elevation={0}
+                  sx={{ 
+                    p: 3, 
+                    background: 'rgba(255,255,255,0.2)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: 3,
+                    border: '1px solid rgba(255,255,255,0.3)'
+                  }}
+                >
+                  <Typography variant="caption" sx={{ opacity: 0.9, display: 'block', mb: 0.5 }}>
+                    Savings Rate
+                  </Typography>
+                  <Typography variant="h3" fontWeight="bold">
+                    {analytics.savings.savingsPercentage}%
+                  </Typography>
+                </Paper>
+              </Stack>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
-                <p className="text-sm text-green-50 mb-3 font-medium">Current Period</p>
-                <p className="text-3xl font-bold mb-2">AED {analytics.savings.totalSavings.toLocaleString()}</p>
-                <p className="text-xs text-green-100">vs. traditional model</p>
-              </div>
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                {[
+                  { 
+                    label: 'Current Period', 
+                    value: `AED ${analytics.savings.totalSavings.toLocaleString()}`,
+                    subtitle: 'vs. traditional model',
+                    icon: '💵'
+                  },
+                  { 
+                    label: 'Monthly Projection', 
+                    value: `AED ${analytics.savings.projectedMonthlySavings.toLocaleString()}`,
+                    subtitle: 'estimated/month',
+                    icon: '📅'
+                  },
+                  { 
+                    label: 'Yearly Projection', 
+                    value: `AED ${analytics.savings.projectedYearlySavings.toLocaleString()}`,
+                    subtitle: 'estimated/year',
+                    icon: '📊'
+                  },
+                  { 
+                    label: 'Capacity Freed', 
+                    value: analytics.savings.equivalentAgentsSaved,
+                    subtitle: 'agent equivalents',
+                    icon: '👥'
+                  }
+                ].map((item, index) => (
+                  <Grid item xs={12} sm={6} md={3} key={index}>
+                    <Paper 
+                      elevation={0}
+                      sx={{ 
+                        p: 2.5, 
+                        background: 'rgba(255,255,255,0.15)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 2,
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        transition: 'all 0.3s',
+                        '&:hover': {
+                          background: 'rgba(255,255,255,0.25)',
+                          transform: 'translateY(-4px)'
+                        }
+                      }}
+                    >
+                      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                        <Typography variant="caption" fontWeight={600} sx={{ opacity: 0.9 }}>
+                          {item.label}
+                        </Typography>
+                        <Typography variant="h6">{item.icon}</Typography>
+                      </Stack>
+                      <Typography variant="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
+                        {item.value}
+                      </Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                        {item.subtitle}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
 
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
-                <p className="text-sm text-green-50 mb-3 font-medium">Monthly Projection</p>
-                <p className="text-3xl font-bold mb-2">AED {analytics.savings.projectedMonthlySavings.toLocaleString()}</p>
-                <p className="text-xs text-green-100">estimated/month</p>
-              </div>
+              <Grid container spacing={2}>
+                {[
+                  {
+                    title: 'AI-Handled',
+                    value: analytics.savings.deflectedCalls,
+                    subtitle: `@ AED ${analytics.savings.costPerAICall} per call`,
+                    icon: '🤖'
+                  },
+                  {
+                    title: 'Escalated',
+                    value: analytics.savings.escalatedCalls,
+                    subtitle: `@ AED ${analytics.savings.costPerHumanCall} per call`,
+                    icon: '👤'
+                  },
+                  {
+                    title: 'Cost Comparison',
+                    value: `AED ${analytics.savings.actualCost.toLocaleString()}`,
+                    subtitle: `Saved AED ${(analytics.savings.traditionalCost - analytics.savings.actualCost).toLocaleString()}`,
+                    icon: '📉'
+                  }
+                ].map((item, index) => (
+                  <Grid item xs={12} md={4} key={index}>
+                    <Paper 
+                      elevation={0}
+                      sx={{ 
+                        p: 2.5, 
+                        background: 'rgba(255,255,255,0.1)',
+                        backdropFilter: 'blur(10px)',
+                        borderRadius: 2,
+                        border: '1px solid rgba(255,255,255,0.15)'
+                      }}
+                    >
+                      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1.5 }}>
+                        <Typography variant="body2" fontWeight={600}>
+                          {item.title}
+                        </Typography>
+                        <Typography variant="h6">{item.icon}</Typography>
+                      </Stack>
+                      <Typography variant="h5" fontWeight="bold" sx={{ mb: 0.5 }}>
+                        {item.value}
+                      </Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.9 }}>
+                        {item.subtitle}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
 
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
-                <p className="text-sm text-green-50 mb-3 font-medium">Yearly Projection</p>
-                <p className="text-3xl font-bold mb-2">AED {analytics.savings.projectedYearlySavings.toLocaleString()}</p>
-                <p className="text-xs text-green-100">estimated/year</p>
-              </div>
-
-              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
-                <p className="text-sm text-green-50 mb-3 font-medium">Capacity Freed</p>
-                <p className="text-3xl font-bold mb-2">{analytics.savings.equivalentAgentsSaved}</p>
-                <p className="text-xs text-green-100">agent equivalents</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-base font-medium text-green-50">AI-Handled</span>
-                  <span className="text-2xl">🤖</span>
-                </div>
-                <p className="text-3xl font-bold mb-1">{analytics.savings.deflectedCalls}</p>
-                <p className="text-sm text-green-100">
-                  @ AED {analytics.savings.costPerAICall} per call
-                </p>
-              </div>
-
-              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-base font-medium text-green-50">Escalated</span>
-                  <span className="text-2xl">👤</span>
-                </div>
-                <p className="text-3xl font-bold mb-1">{analytics.savings.escalatedCalls}</p>
-                <p className="text-sm text-green-100">
-                  @ AED {analytics.savings.costPerHumanCall} per call
-                </p>
-              </div>
-
-              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-base font-medium text-green-50">Comparison</span>
-                  <span className="text-2xl">📉</span>
-                </div>
-                <p className="text-sm mb-2">
-                  <span className="line-through text-red-200">AED {analytics.savings.traditionalCost.toLocaleString()}</span>
-                </p>
-                <p className="text-2xl font-bold text-green-50">AED {analytics.savings.actualCost.toLocaleString()}</p>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-white/30">
-              <p className="text-sm text-green-50 text-center leading-relaxed">
+              <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,0.2)' }} />
+              
+              <Typography variant="body2" align="center" sx={{ opacity: 0.9 }}>
                 💡 AI reduces support costs by handling routine inquiries efficiently, allowing agents to focus on complex cases
-              </p>
-            </div>
-          </div>
+              </Typography>
+            </CardContent>
+          </Card>
         )}
 
-        {/* Key Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-dewa-green">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Interactions</h3>
-              <span className="text-3xl">📊</span>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.totalInteractions || 0}</p>
-            <p className="text-sm text-gray-500">All channels</p>
-          </div>
+        {/* Key Metrics Cards with AI Signals */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          {[
+            {
+              title: 'Total Interactions',
+              value: analytics?.totalInteractions || 0,
+              subtitle: 'All channels',
+              icon: <Analytics fontSize="large" />,
+              color: '#10b981',
+              trend: getTrendIndicator(analytics?.totalInteractions || 0, true)
+            },
+            {
+              title: 'FCR Rate',
+              value: `${analytics?.fcrRate || 0}%`,
+              subtitle: 'First Contact Resolution',
+              icon: <CheckCircle fontSize="large" />,
+              color: '#3b82f6',
+              trend: getTrendIndicator(analytics?.fcrRate || 0, true),
+              status: getStatusInfo(analytics?.fcrRate || 0, 70)
+            },
+            {
+              title: 'Deflection Rate',
+              value: `${analytics?.deflectionRate || 0}%`,
+              subtitle: 'Prevented tickets',
+              icon: <Speed fontSize="large" />,
+              color: '#f59e0b',
+              trend: getTrendIndicator(analytics?.deflectionRate || 0, true),
+              status: getStatusInfo(analytics?.deflectionRate || 0, 40)
+            },
+            {
+              title: 'Customer Satisfaction',
+              value: `${analytics?.avgSatisfaction || 0}/5`,
+              subtitle: 'Average rating',
+              icon: <ThumbUp fontSize="large" />,
+              color: '#8b5cf6',
+              trend: getTrendIndicator(analytics?.avgSatisfaction || 0, true),
+              status: getStatusInfo((analytics?.avgSatisfaction || 0) * 20, 80)
+            }
+          ].map((metric, index) => (
+            <Grid item xs={12} sm={6} lg={3} key={index}>
+              <Card 
+                elevation={2}
+                sx={{ 
+                  height: '100%',
+                  borderRadius: 3,
+                  borderLeft: `6px solid ${metric.color}`,
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: 6
+                  }
+                }}
+              >
+                <CardContent>
+                  <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                        {metric.title}
+                      </Typography>
+                      {metric.status && (
+                        <Chip 
+                          size="small" 
+                          label={metric.status.status} 
+                          color={metric.status.color}
+                          icon={metric.status.icon}
+                          sx={{ mt: 0.5, height: 20, fontSize: '0.7rem' }}
+                        />
+                      )}
+                    </Box>
+                    <Avatar sx={{ bgcolor: `${metric.color}20`, color: metric.color, width: 48, height: 48 }}>
+                      {metric.icon}
+                    </Avatar>
+                  </Stack>
+                  
+                  <Typography variant="h3" fontWeight="bold" sx={{ mb: 0.5, color: metric.color }}>
+                    {metric.value}
+                  </Typography>
+                  
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="caption" color="text.secondary">
+                      {metric.subtitle}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      icon={metric.trend.icon}
+                      label={`${metric.trend.change}%`}
+                      color={metric.trend.isGood ? 'success' : 'error'}
+                      sx={{ height: 20, fontSize: '0.7rem' }}
+                    />
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
 
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-blue-500">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">FCR Rate</h3>
-              <span className="text-3xl">✅</span>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.fcrRate || 0}%</p>
-            <p className="text-sm text-gray-500">First Contact Resolution</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-orange-500">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Deflection</h3>
-              <span className="text-3xl">🎯</span>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.deflectionRate || 0}%</p>
-            <p className="text-sm text-gray-500">Prevented tickets</p>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-purple-500">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Satisfaction</h3>
-              <span className="text-3xl">⭐</span>
-            </div>
-            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.avgSatisfaction || 0}/5</p>
-            <p className="text-sm text-gray-500">Customer rating</p>
-          </div>
-        </div>
-
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        {/* Charts with Modern Design */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
           {/* Performance Metrics */}
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-7">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Performance vs Targets</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="value" fill="#00A651" name="Current" />
-              <Bar dataKey="target" fill="#0072BC" name="Target" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+          <Grid item xs={12} lg={6}>
+            <Card elevation={2} sx={{ borderRadius: 3, height: '100%' }}>
+              <CardContent>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                  <Box>
+                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      Performance vs Targets
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Tracking key performance indicators
+                    </Typography>
+                  </Box>
+                  <Avatar sx={{ bgcolor: 'primary.light' }}>
+                    <Insights />
+                  </Avatar>
+                </Stack>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={performanceData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="name" tick={{ fill: '#6b7280' }} />
+                    <YAxis tick={{ fill: '#6b7280' }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="value" fill="#10b981" name="Current" radius={[8, 8, 0, 0]} />
+                    <Bar dataKey="target" fill="#3b82f6" name="Target" radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
 
           {/* Interaction Distribution */}
-          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-7">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Interaction Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) => `${name}: ${value}`}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+          <Grid item xs={12} lg={6}>
+            <Card elevation={2} sx={{ borderRadius: 3, height: '100%' }}>
+              <CardContent>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+                  <Box>
+                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                      Interaction Distribution
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Breakdown of customer interactions
+                    </Typography>
+                  </Box>
+                  <Avatar sx={{ bgcolor: 'secondary.light' }}>
+                    <Support />
+                  </Avatar>
+                </Stack>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, value }) => `${name}: ${value}`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                      }}
+                    />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+
+        {/* AI Insights with Visual Indicators */}
+        <Card 
+          elevation={2}
+          sx={{ 
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',
+            borderRadius: 4,
+            overflow: 'hidden'
+          }}
+        >
+          <CardContent sx={{ p: 4 }}>
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+              <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
+                <Psychology fontSize="large" />
+              </Avatar>
+              <Box>
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
+                  AI Continuous Learning Insights
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Real-time intelligence and adaptation metrics
+                </Typography>
+              </Box>
+            </Stack>
+
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+              {[
+                {
+                  title: 'AI Accuracy',
+                  value: `${analytics?.fcrRate || 0}%`,
+                  description: 'Intent classification accuracy improving with each interaction',
+                  icon: <AutoAwesome fontSize="large" />,
+                  color: 'success',
+                  bgColor: '#10b98120'
+                },
+                {
+                  title: 'Proactive Impact',
+                  value: analytics?.deflectedCount || 0,
+                  description: 'Tickets prevented through proactive guidance',
+                  icon: <Speed fontSize="large" />,
+                  color: 'info',
+                  bgColor: '#3b82f620'
+                },
+                {
+                  title: 'Human Oversight',
+                  value: '100%',
+                  description: 'AI recommendations require human approval',
+                  icon: <CheckCircle fontSize="large" />,
+                  color: 'warning',
+                  bgColor: '#f59e0b20'
+                }
+              ].map((insight, index) => (
+                <Grid item xs={12} md={4} key={index}>
+                  <Paper 
+                    elevation={0}
+                    sx={{ 
+                      p: 3, 
+                      height: '100%',
+                      borderRadius: 3,
+                      background: insight.bgColor,
+                      border: '2px solid',
+                      borderColor: `${insight.color}.light`,
+                      transition: 'all 0.3s',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        boxShadow: 3
+                      }
+                    }}
+                  >
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                      <Typography variant="h6" fontWeight="bold">
+                        {insight.title}
+                      </Typography>
+                      <Avatar sx={{ bgcolor: `${insight.color}.main`, width: 40, height: 40 }}>
+                        {insight.icon}
+                      </Avatar>
+                    </Stack>
+                    <Typography variant="h3" fontWeight="bold" color={`${insight.color}.main`} sx={{ mb: 1.5 }}>
+                      {insight.value}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {insight.description}
+                    </Typography>
+                  </Paper>
+                </Grid>
+              ))}
+            </Grid>
+
+            <Divider sx={{ my: 3 }} />
+
+            <Box sx={{ bgcolor: 'white', borderRadius: 2, p: 3 }}>
+              <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
+                <Avatar sx={{ bgcolor: 'success.main' }}>
+                  <Schedule />
+                </Avatar>
+                <Typography variant="h6" fontWeight="bold">
+                  Feedback Loop Active ♻️
+                </Typography>
+              </Stack>
+              
+              <Grid container spacing={2}>
+                {[
+                  'Real-time logging of all AI interactions',
+                  'Customer satisfaction data feeding back to models',
+                  'Automated A/B testing for empathy responses',
+                  'Human override tracking for model improvement'
+                ].map((item, index) => (
+                  <Grid item xs={12} sm={6} key={index}>
+                    <Stack direction="row" spacing={1} alignItems="flex-start">
+                      <CheckCircle color="success" sx={{ fontSize: 20, mt: 0.3 }} />
+                      <Typography variant="body2" color="text.secondary">
+                        {item}
+                      </Typography>
+                    </Stack>
+                  </Grid>
                 ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-        {/* AI Insights */}
-        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-3xl shadow-md p-8 border border-blue-100">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <span className="mr-3">🤖</span>
-            Continuous Learning Insights
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              <h4 className="font-semibold text-gray-800 mb-3 text-lg">AI Accuracy</h4>
-              <p className="text-3xl font-bold text-dewa-green mb-2">
-                {analytics?.fcrRate || 0}%
-              </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Intent classification accuracy improving with each interaction
-              </p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              <h4 className="font-semibold text-gray-800 mb-3 text-lg">Proactive Impact</h4>
-              <p className="text-3xl font-bold text-dewa-blue mb-2">
-                {analytics?.deflectedCount || 0}
-              </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Tickets prevented through proactive guidance
-              </p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-              <h4 className="font-semibold text-gray-800 mb-3 text-lg">Human Oversight</h4>
-              <p className="text-3xl font-bold text-orange-500 mb-2">100%</p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                AI recommendations require human approval
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h4 className="font-semibold text-gray-900 mb-4 text-lg">Feedback Loop Active ♻️</h4>
-            <div className="space-y-3 text-sm text-gray-700">
-              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Real-time logging of all AI interactions</p>
-              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Customer satisfaction data feeding back to models</p>
-              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Automated A/B testing for empathy responses</p>
-              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Human override tracking for model improvement</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </Grid>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   )
 }

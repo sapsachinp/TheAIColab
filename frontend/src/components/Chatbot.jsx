@@ -386,28 +386,28 @@ export default function Chatbot({ customer }) {
       >
         <Link
           to="/summary"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <Activity className="w-5 h-5" />
           {tCommon('navigation.summary')}
         </Link>
         <Link
           to="/request"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <FileText className="w-5 h-5" />
           {tCommon('navigation.newRequest')}
         </Link>
         <Link
           to="/chat"
-          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl font-semibold shadow-lg shadow-dewa-green/20"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
         >
           <MessageSquare className="w-5 h-5" />
           {tCommon('navigation.chatSupport')}
         </Link>
         <Link
           to="/dashboard"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <BarChart3 className="w-5 h-5" />
           {tCommon('navigation.analytics')}

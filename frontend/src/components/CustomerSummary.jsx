@@ -6,7 +6,8 @@ import { motion } from 'framer-motion'
 import { 
   User, FileText, Zap, AlertCircle, TrendingUp, Brain,
   CreditCard, Award, BarChart3,
-  MessageSquare, FileCheck, Activity, Shield
+  MessageSquare, FileCheck, Activity, Shield,
+  Home, PhoneOff, Receipt, DollarSign, AlertTriangle, CheckCircle, Bell
 } from 'lucide-react'
 
 export default function CustomerSummary({ customer }) {
@@ -89,6 +90,55 @@ export default function CustomerSummary({ customer }) {
     return labels[status] || status
   }
 
+  // Generate timeline data for last 6 months
+  const generateTimelineData = () => {
+    const months = []
+    const today = new Date()
+    
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(today.getFullYear(), today.getMonth() - i, 1)
+      const monthName = date.toLocaleDateString('en-US', { month: 'short' })
+      const year = date.getFullYear()
+      
+      months.push({
+        month: monthName,
+        year: year,
+        fullDate: date,
+        events: []
+      })
+    }
+    
+    // Add sample events (in real app, this would come from customer data)
+    const eventTypes = [
+      { type: 'invoice', label: 'Invoice', icon: Receipt, color: 'bg-blue-500', lightColor: 'bg-blue-100', textColor: 'text-blue-600' },
+      { type: 'payment', label: 'Payment', icon: CheckCircle, color: 'bg-green-500', lightColor: 'bg-green-100', textColor: 'text-green-600' },
+      { type: 'reminder', label: 'Reminder', icon: Bell, color: 'bg-amber-500', lightColor: 'bg-amber-100', textColor: 'text-amber-600' },
+      { type: 'fine', label: 'Fine', icon: AlertTriangle, color: 'bg-red-500', lightColor: 'bg-red-100', textColor: 'text-red-600' },
+      { type: 'move_in', label: 'Move In', icon: Home, color: 'bg-purple-500', lightColor: 'bg-purple-100', textColor: 'text-purple-600' },
+      { type: 'disconnection', label: 'Disconnect', icon: PhoneOff, color: 'bg-orange-500', lightColor: 'bg-orange-100', textColor: 'text-orange-600' }
+    ]
+    
+    // Add events to months
+    months[0].events.push({ ...eventTypes[4], date: 5 }) // Move in
+    months[1].events.push({ ...eventTypes[0], date: 1 }) // Invoice
+    months[1].events.push({ ...eventTypes[1], date: 10 }) // Payment
+    months[2].events.push({ ...eventTypes[0], date: 1 }) // Invoice
+    months[2].events.push({ ...eventTypes[2], date: 5 }) // Reminder
+    months[2].events.push({ ...eventTypes[1], date: 8 }) // Payment
+    months[3].events.push({ ...eventTypes[0], date: 1 }) // Invoice
+    months[3].events.push({ ...eventTypes[3], date: 15 }) // Fine
+    months[3].events.push({ ...eventTypes[1], date: 18 }) // Payment
+    months[4].events.push({ ...eventTypes[0], date: 1 }) // Invoice
+    months[4].events.push({ ...eventTypes[2], date: 3 }) // Reminder
+    months[4].events.push({ ...eventTypes[1], date: 5 }) // Payment
+    months[5].events.push({ ...eventTypes[0], date: 1 }) // Invoice
+    months[5].events.push({ ...eventTypes[2], date: 8 }) // Reminder
+    
+    return months
+  }
+
+  const timelineData = generateTimelineData()
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
@@ -99,28 +149,28 @@ export default function CustomerSummary({ customer }) {
       >
         <Link
           to="/summary"
-          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl font-semibold shadow-lg shadow-dewa-green/20"
+          className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
         >
           <Activity className="w-5 h-5" />
           Summary
         </Link>
         <Link
           to="/request"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <FileCheck className="w-5 h-5" />
           New Request
         </Link>
         <Link
           to="/chat"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <MessageSquare className="w-5 h-5" />
           Chat Support
         </Link>
         <Link
           to="/dashboard"
-          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
+          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium shadow-sm hover:shadow-md transition-all border border-gray-200"
         >
           <BarChart3 className="w-5 h-5" />
           Analytics
@@ -524,6 +574,218 @@ export default function CustomerSummary({ customer }) {
           )}
         </div>
       )}
+
+      {/* Customer Events Timeline - Last 6 Months */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl p-8 mb-6 border border-gray-100"
+      >
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-br from-dewa-green to-emerald-600 rounded-xl">
+                <Activity className="w-7 h-7 text-white" />
+              </div>
+              Customer Events Timeline
+            </h2>
+            <p className="text-sm text-gray-600 mt-2 ml-14">Track your account activity over the last 6 months</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-xs">
+            <div className="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-200">
+              <Receipt className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-blue-700 font-medium">Invoice</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+              <CheckCircle className="w-3.5 h-3.5 text-green-600" />
+              <span className="text-green-700 font-medium">Payment</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200">
+              <Bell className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-amber-700 font-medium">Reminder</span>
+            </div>
+            <div className="flex items-center gap-1.5 bg-red-50 px-3 py-1.5 rounded-full border border-red-200">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
+              <span className="text-red-700 font-medium">Fine</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Timeline Container */}
+        <div className="relative px-4">
+          {/* Horizontal main line with gradient */}
+          <div className="absolute top-[52px] left-0 right-0 h-1 bg-gradient-to-r from-transparent via-dewa-green to-transparent opacity-40"></div>
+          <div className="absolute top-[52px] left-0 right-0 h-0.5 bg-gradient-to-r from-gray-300 via-dewa-green to-gray-300"></div>
+          
+          {/* Month markers and events */}
+          <div className="relative flex justify-between items-start">
+            {timelineData.map((monthData, index) => (
+              <div key={index} className="flex-1 flex flex-col items-center relative">
+                {/* Month label at top */}
+                <div className="text-center mb-4 bg-white px-3 py-1 rounded-lg shadow-sm border border-gray-200">
+                  <div className="text-sm font-bold text-gray-800">
+                    {monthData.month}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    '{String(monthData.year).slice(-2)}
+                  </div>
+                </div>
+
+                {/* Main dot on timeline */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.1 * index, type: "spring", stiffness: 200 }}
+                  className={`w-5 h-5 rounded-full z-10 shadow-lg relative ${
+                    monthData.events.length > 0 
+                      ? 'bg-gradient-to-br from-dewa-green to-emerald-600 ring-4 ring-green-100' 
+                      : 'bg-white border-4 border-gray-300'
+                  }`}
+                >
+                  {monthData.events.length > 0 && (
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white text-white text-[8px] font-bold flex items-center justify-center"
+                    >
+                      {monthData.events.length}
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                {/* Vertical line for events */}
+                {monthData.events.length > 0 && (
+                  <div className="w-px h-8 bg-gradient-to-b from-dewa-green to-transparent"></div>
+                )}
+
+                {/* Events for this month */}
+                <div className="mt-2 space-y-2 min-h-[180px] w-full max-w-[120px]">
+                  {monthData.events.map((event, eventIndex) => {
+                    const EventIcon = event.icon
+                    return (
+                      <motion.div
+                        key={eventIndex}
+                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ 
+                          delay: 0.3 + (index * 0.08) + (eventIndex * 0.05),
+                          type: "spring",
+                          stiffness: 150
+                        }}
+                        className="relative group"
+                      >
+                        {/* Connector line from timeline to event */}
+                        <div className={`absolute left-1/2 -translate-x-1/2 w-0.5 ${event.color} opacity-20 -top-2`} style={{ height: '8px' }}></div>
+                        
+                        {/* Event card - cleaner design like reference */}
+                        <div className={`${event.lightColor} border-2 ${event.color.replace('bg-', 'border-')} rounded-xl p-2.5 shadow-md hover:shadow-xl transition-all cursor-pointer hover:-translate-y-1 relative overflow-hidden`}>
+                          {/* Background pattern */}
+                          <div className="absolute top-0 right-0 w-16 h-16 opacity-5">
+                            <EventIcon className="w-full h-full" />
+                          </div>
+                          
+                          <div className="flex items-center gap-2 mb-1 relative z-10">
+                            <div className={`${event.color} p-1.5 rounded-lg shadow-sm`}>
+                              <EventIcon className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className={`text-xs font-bold ${event.textColor} truncate`}>
+                                {event.label}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className={`text-[10px] ${event.textColor} opacity-75 font-medium ml-1`}>
+                            {monthData.month} {event.date}
+                          </div>
+                          
+                          {/* Hover tooltip */}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-xl">
+                            {event.label} on {monthData.month} {event.date}
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Summary stats with modern cards */}
+        <div className="mt-10 pt-8 border-t border-gray-200">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="text-center bg-blue-50 rounded-xl p-4 border border-blue-200 hover:shadow-md transition-shadow"
+            >
+              <Receipt className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-blue-700">{timelineData.reduce((sum, m) => sum + m.events.filter(e => e.type === 'invoice').length, 0)}</div>
+              <div className="text-xs text-blue-600 font-medium">Invoices</div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.85 }}
+              className="text-center bg-green-50 rounded-xl p-4 border border-green-200 hover:shadow-md transition-shadow"
+            >
+              <CheckCircle className="w-6 h-6 text-green-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-green-700">{timelineData.reduce((sum, m) => sum + m.events.filter(e => e.type === 'payment').length, 0)}</div>
+              <div className="text-xs text-green-600 font-medium">Payments</div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+              className="text-center bg-amber-50 rounded-xl p-4 border border-amber-200 hover:shadow-md transition-shadow"
+            >
+              <Bell className="w-6 h-6 text-amber-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-amber-700">{timelineData.reduce((sum, m) => sum + m.events.filter(e => e.type === 'reminder').length, 0)}</div>
+              <div className="text-xs text-amber-600 font-medium">Reminders</div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.95 }}
+              className="text-center bg-red-50 rounded-xl p-4 border border-red-200 hover:shadow-md transition-shadow"
+            >
+              <AlertTriangle className="w-6 h-6 text-red-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-red-700">{timelineData.reduce((sum, m) => sum + m.events.filter(e => e.type === 'fine').length, 0)}</div>
+              <div className="text-xs text-red-600 font-medium">Fines</div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+              className="text-center bg-purple-50 rounded-xl p-4 border border-purple-200 hover:shadow-md transition-shadow"
+            >
+              <Home className="w-6 h-6 text-purple-600 mx-auto mb-2" />
+              <div className="text-2xl font-bold text-purple-700">{timelineData.reduce((sum, m) => sum + m.events.filter(e => e.type === 'move_in').length, 0)}</div>
+              <div className="text-xs text-purple-600 font-medium">Move In</div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.05 }}
+              className="text-center bg-gradient-to-br from-dewa-green to-emerald-600 rounded-xl p-4 border border-green-300 hover:shadow-md transition-shadow text-white"
+            >
+              <Activity className="w-6 h-6 mx-auto mb-2" />
+              <div className="text-2xl font-bold">{timelineData.reduce((sum, m) => sum + m.events.length, 0)}</div>
+              <div className="text-xs font-medium">Total Events</div>
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Bill Prediction */}

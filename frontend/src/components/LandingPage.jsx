@@ -200,16 +200,26 @@ export default function LandingPage() {
                 transition={{ duration: 0.8 }}
               >
                 <Chip
-                  icon={<AutoAwesome />}
+                  icon={<AutoAwesome sx={{ color: '#10b981 !important', fontSize: 24 }} />}
                   label="AI-Powered Support Platform"
-                  color="success"
                   sx={{
                     mb: 4,
-                    px: 2,
-                    py: 3,
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    px: 3,
+                    py: 3.5,
+                    fontSize: { xs: '0.9rem', md: '1.1rem' },
+                    fontWeight: 700,
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    color: '#0f172a',
+                    border: '2px solid #10b981',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3)',
+                    '& .MuiChip-icon': {
+                      marginLeft: '8px',
+                    },
+                    '&:hover': {
+                      background: 'rgba(255, 255, 255, 1)',
+                      boxShadow: '0 12px 48px rgba(16, 185, 129, 0.4)',
+                    }
                   }}
                 />
               </motion.div>
