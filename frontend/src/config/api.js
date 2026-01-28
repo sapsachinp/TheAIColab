@@ -146,7 +146,25 @@ export const mockData = {
         phone: '+971-50-123-4567',
         address: 'Dubai Marina, Dubai, UAE',
         accountStatus: 'Active',
-        customerSince: '2020-01-15'
+        customerSince: '2020-01-15',
+        predictedBill: 1320.00,
+        lastBill: 1250.50,
+        totalOutstandingDues: 1250.50,
+        contractAccounts: [
+          {
+            id: customerId + '-CA1',
+            name: 'Electricity Account',
+            services: [
+              { name: 'Electricity', status: 'Active' },
+              { name: 'Water', status: 'Active' }
+            ]
+          }
+        ],
+        openComplaints: [],
+        accountHealth: {
+          score: 85,
+          status: 'good'
+        }
       },
       billing: {
         currentBalance: 1250.50,
@@ -175,7 +193,24 @@ export const mockData = {
         { date: '2026-01-25', type: 'Bill Generated', amount: 1250.50, status: 'Pending' },
         { date: '2026-01-10', type: 'Payment Received', amount: 980.00, status: 'Completed' },
         { date: '2025-12-28', type: 'Bill Generated', amount: 980.00, status: 'Paid' }
-      ]
+      ],
+      aiInsights: {
+        billPrediction: {
+          predicted: 1320.00,
+          nextBill: 1320.00,
+          trend: 'increasing',
+          confidence: 0.87
+        },
+        recommendations: [
+          'Your consumption is 5% higher than last month',
+          'Consider using energy during off-peak hours',
+          'Check for any inefficient appliances'
+        ],
+        accountHealth: {
+          score: 85,
+          status: 'good'
+        }
+      }
     }
   },
   

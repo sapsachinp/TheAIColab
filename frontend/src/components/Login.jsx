@@ -9,7 +9,7 @@ import {
   TrendingUp, Globe, Brain, Users, MessageCircle, 
   Target, BarChart3, Zap
 } from 'lucide-react'
-import { API_BASE_URL, mockAuth } from '../config/api'
+import { API_BASE_URL, mockAuth, MOCK_USERS } from '../config/api'
 
 export default function Login({ onLogin }) {
   const { t } = useTranslation('common')
@@ -25,6 +25,7 @@ export default function Login({ onLogin }) {
   const [resendCooldown, setResendCooldown] = useState(0)
   const [showFeatures, setShowFeatures] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [demoMode, setDemoMode] = useState(false)
 
   // Countdown timer for OTP expiry
   useEffect(() => {
@@ -48,34 +49,34 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      let response
-      try {
-        // Try real backend first
-        response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-          email,
-          password,
-          language
-        }, { timeout: 5000 })
-      } catch (backendError) {
-        // Fallback to mock service
-        console.log('Backend unavailable, using mock authentication')
-        const mockResponse = await mockAuth.login(email, password)
-        response = { data: mockResponse }
+      // Demo Mode - Skip validation and go directly to OTP screen
+      if (demoMode) {
+        console.log('Demo mode enabled - bypassing password validation')
+        setMfaRequired(true)
+        setOtpExpiresIn(5)
+        setCountdown(300)
+        setLoading(false)
+        return
       }
 
-      if (response.data.requiresMFA) {
-        // MFA required - show OTP input
-        setMfaRequired(true)
-        setOtpExpiresIn(response.data.expiresIn)
-        setCountdown(response.data.expiresIn * 60) // Convert minutes to seconds
-        setError('')
-      } else if (response.data.success) {
-        // Direct login (MFA not enabled)
-        onLogin(response.data.token, response.data.customer)
+      // Always use local validation with MOCK_USERS (no backend call)
+      console.log('Using local authentication with file data')
+      const user = MOCK_USERS.find(u => u.email === email && u.password === password)
+      
+      if (!user) {
+        setError('Invalid email or password')
+        setLoading(false)
+        return
       }
+
+      // Show MFA screen (skip actual OTP sending)
+      setMfaRequired(true)
+      setOtpExpiresIn(5)
+      setCountdown(300)
+      setError('')
+      setLoading(false)
     } catch (err) {
-      setError(err.response?.data?.error || err.message || 'Login failed. Please try again.')
-    } finally {
+      setError(err.message || 'Login failed. Please try again.')
       setLoading(false)
     }
   }
@@ -86,26 +87,36 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      let response
-      try {
-        // Try real backend first
-        response = await axios.post(`${API_BASE_URL}/api/auth/verify-otp`, {
-          email,
-          otp
-        }, { timeout: 5000 })
-      } catch (backendError) {
-        // Fallback to mock service
-        console.log('Backend unavailable, using mock OTP verification')
-        const mockResponse = await mockAuth.verifyOTP(email, otp)
-        response = { data: mockResponse }
+      // Demo Mode - Skip OTP validation and login directly
+      if (demoMode) {
+        console.log('Demo mode enabled - bypassing OTP validation')
+        const demoUser = MOCK_USERS.find(u => u.email === email) || MOCK_USERS[0]
+        onLogin('demo-token-' + Date.now(), demoUser.customer)
+        setLoading(false)
+        return
       }
 
-      if (response.data.success) {
-        onLogin(response.data.token, response.data.customer)
+      // Always accept "000000" as valid OTP (no backend call)
+      console.log('Using local OTP validation - accepting 000000')
+      
+      if (otp !== '000000') {
+        setError('Invalid OTP. Please use 000000')
+        setLoading(false)
+        return
       }
+
+      // Find user and login
+      const user = MOCK_USERS.find(u => u.email === email)
+      if (!user) {
+        setError('User not found')
+        setLoading(false)
+        return
+      }
+
+      onLogin('local-token-' + Date.now(), user.customer)
+      setLoading(false)
     } catch (err) {
-      setError(err.response?.data?.error || err.message || 'Verification failed. Please try again.')
-    } finally {
+      setError(err.message || 'Verification failed. Please try again.')
       setLoading(false)
     }
   }
@@ -123,7 +134,7 @@ export default function Login({ onLogin }) {
         response = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, {
           email,
           language
-        }, { timeout: 5000 })
+        }, { timeout: 1000 })  // Reduced to 1 second for faster fallback
       } catch (backendError) {
         // Fallback to mock service
         console.log('Backend unavailable, using mock OTP resend')
@@ -504,6 +515,22 @@ export default function Login({ onLogin }) {
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
+              </div>
+
+              {/* Demo Mode Checkbox */}
+              <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <input
+                  type="checkbox"
+                  id="demoMode"
+                  checked={demoMode}
+                  onChange={(e) => setDemoMode(e.target.checked)}
+                  className="w-4 h-4 text-dewa-green border-amber-300 rounded focus:ring-dewa-green focus:ring-2"
+                />
+                <label htmlFor="demoMode" className="text-sm text-amber-800 cursor-pointer select-none">
+                  {language === 'en' 
+                    ? '🚀 Demo Mode (Skip validation - instant access)' 
+                    : '🚀 وضع التجربة (تخطي التحقق - وصول فوري)'}
+                </label>
               </div>
 
               <motion.button

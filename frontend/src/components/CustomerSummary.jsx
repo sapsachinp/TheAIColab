@@ -26,17 +26,18 @@ export default function CustomerSummary({ customer }) {
       let response
       
       try {
-        // Try real backend first
+        // Try real backend first with 3 second timeout
         response = await axios.get(
           `${API_BASE_URL}/api/customer/summary/${customer.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 3000  // 3 seconds to get real AI data
           }
         )
+        console.log('✅ Loaded real data from backend')
       } catch (backendError) {
         // Fallback to mock data
-        console.log('Backend unavailable, using mock customer data')
+        console.log('⚠️ Backend unavailable, using mock customer data')
         const mockResponse = await mockData.getCustomerSummary(customer.id)
         response = { data: mockResponse }
       }

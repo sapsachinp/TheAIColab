@@ -53,17 +53,18 @@ export default function Dashboard() {
       let response
       
       try {
-        // Try real backend first
+        // Try real backend first with 3 second timeout
         response = await axios.get(
           `${API_BASE_URL}/api/backoffice/analytics`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 3000  // 3 seconds to get real AI analytics
           }
         )
+        console.log('✅ Loaded real analytics from backend')
       } catch (backendError) {
         // Fallback to mock analytics
-        console.log('Backend unavailable, using mock analytics data')
+        console.log('⚠️ Backend unavailable, using mock analytics data')
         const mockResponse = await mockData.getAnalytics()
         response = { data: { metrics: mockResponse.analytics } }
       }
