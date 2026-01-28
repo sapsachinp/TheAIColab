@@ -1,0 +1,31 @@
+{
+  "title": "Analytics & Continuous Learning",
+  "subtitle": "Real-time Performance Metrics",
+  "metrics": {
+    "totalInteractions": "Total Interactions",
+    "fcrRate": "First Contact Resolution",
+    "deflectionRate": "AI Deflection Rate",
+    "avgSatisfaction": "Avg Satisfaction",
+    "avgHandlingTime": "Avg Handling Time",
+    "sentimentScore": "Sentiment Score",
+    "aiAccuracy": "AI Accuracy"
+  },
+  "charts": {
+    "performanceVsTargets": "Performance vs Targets",
+    "interactionDistribution": "Interaction Distribution",
+    "currentValue": "Current",
+    "targetValue": "Target",
+    "resolved": "Resolved",
+    "deflected": "Deflected",
+    "escalated": "Escalated"
+  },
+  "insights": {
+    "title": "AI Insights",
+    "topIntents": "Top Query Intents",
+    "peakHours": "Peak Support Hours",
+    "satisfaction": "Customer Satisfaction Trend",
+    "recommendations": "Recommendations for Improvement"
+  },
+  "seconds": "seconds",
+  "minutes": "minutes"
+}

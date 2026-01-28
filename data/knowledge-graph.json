@@ -1,0 +1,110 @@
+{
+  "intents": {
+    "new_request_with_existing": {
+      "count": 4,
+      "successRate": 100,
+      "avgConfidence": 0.9,
+      "commonQueries": [],
+      "resolutionTime": []
+    },
+    "new_request": {
+      "count": 3,
+      "successRate": 100,
+      "avgConfidence": 0.9499999999999998,
+      "commonQueries": [],
+      "resolutionTime": []
+    },
+    "unknown": {
+      "count": 2,
+      "successRate": 100,
+      "avgConfidence": 0.6,
+      "commonQueries": [],
+      "resolutionTime": []
+    },
+    "ticket_tracking": {
+      "count": 1,
+      "successRate": 100,
+      "avgConfidence": 0.95,
+      "commonQueries": [],
+      "resolutionTime": []
+    }
+  },
+  "resolutions": {
+    "new_request_with_existing": {
+      "successfulPatterns": [],
+      "avgResolutionTime": 0,
+      "count": 4
+    },
+    "new_request": {
+      "successfulPatterns": [],
+      "avgResolutionTime": 0,
+      "count": 3
+    },
+    "unknown": {
+      "successfulPatterns": [],
+      "avgResolutionTime": 0,
+      "count": 2
+    },
+    "ticket_tracking": {
+      "successfulPatterns": [],
+      "avgResolutionTime": 0,
+      "count": 1
+    }
+  },
+  "escalations": {},
+  "customerPatterns": {},
+  "queryVariations": {
+    "new_request_with_existing": [
+      {
+        "query": "i want to submit new complaint related to high consumption",
+        "count": 1,
+        "firstSeen": "2026-01-28T08:11:56.070Z"
+      },
+      {
+        "query": "new request",
+        "count": 2,
+        "firstSeen": "2026-01-28T08:13:12.202Z"
+      },
+      {
+        "query": "submit new request",
+        "count": 1,
+        "firstSeen": "2026-01-28T08:17:23.252Z"
+      }
+    ],
+    "new_request": [
+      {
+        "query": "submit a new request anyway",
+        "count": 3,
+        "firstSeen": "2026-01-28T08:12:07.251Z"
+      }
+    ],
+    "unknown": [
+      {
+        "query": "requests",
+        "count": 1,
+        "firstSeen": "2026-01-28T08:13:13.167Z"
+      },
+      {
+        "query": "request",
+        "count": 1,
+        "firstSeen": "2026-01-28T08:17:11.601Z"
+      }
+    ],
+    "ticket_tracking": [
+      {
+        "query": "track existing request",
+        "count": 1,
+        "firstSeen": "2026-01-28T08:17:15.750Z"
+      }
+    ]
+  },
+  "feedbackLoop": {
+    "corrections": [],
+    "improvements": []
+  },
+  "metadata": {
+    "lastUpdated": "2026-01-28T08:17:23.252Z",
+    "totalInteractions": 10,
+    "learningCycles": 0
+  }
+}

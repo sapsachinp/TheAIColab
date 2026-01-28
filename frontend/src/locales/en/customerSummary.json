@@ -1,0 +1,43 @@
+{
+  "title": "Customer Account Summary",
+  "accountHealth": {
+    "title": "Account Health",
+    "score": "Score",
+    "reasons": "Reasons",
+    "recommendations": "Recommendations"
+  },
+  "billing": {
+    "nextBill": "Next Bill (Predicted)",
+    "lastBill": "Last Bill",
+    "dueDate": "Due Date",
+    "paymentHistory": "Payment History",
+    "aed": "AED"
+  },
+  "consumption": {
+    "title": "Consumption Insights",
+    "history": "Consumption History",
+    "patterns": "Usage Patterns",
+    "peakHours": "Peak Hours",
+    "averageDaily": "Average Daily",
+    "comparison": "Compared to Similar Customers",
+    "kwh": "kWh",
+    "month": "Month",
+    "amount": "Amount"
+  },
+  "complaints": {
+    "title": "Open Complaints",
+    "ticketId": "Ticket ID",
+    "subject": "Subject",
+    "status": "Status",
+    "priority": "Priority",
+    "createdAt": "Created",
+    "noComplaints": "No open complaints"
+  },
+  "contact": {
+    "title": "Contact Information",
+    "email": "Email",
+    "phone": "Phone",
+    "accountNumber": "Account Number",
+    "address": "Address"
+  }
+}

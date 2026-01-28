@@ -1,0 +1,31 @@
+{
+  "title": "التحليلات والتعلم المستمر",
+  "subtitle": "مقاييس الأداء في الوقت الفعلي",
+  "metrics": {
+    "totalInteractions": "إجمالي التفاعلات",
+    "fcrRate": "الحل من الاتصال الأول",
+    "deflectionRate": "معدل التحويل بالذكاء الاصطناعي",
+    "avgSatisfaction": "متوسط الرضا",
+    "avgHandlingTime": "متوسط وقت المعالجة",
+    "sentimentScore": "درجة المشاعر",
+    "aiAccuracy": "دقة الذكاء الاصطناعي"
+  },
+  "charts": {
+    "performanceVsTargets": "الأداء مقابل الأهداف",
+    "interactionDistribution": "توزيع التفاعلات",
+    "currentValue": "الحالي",
+    "targetValue": "الهدف",
+    "resolved": "تم الحل",
+    "deflected": "تم التحويل",
+    "escalated": "تم التصعيد"
+  },
+  "insights": {
+    "title": "رؤى الذكاء الاصطناعي",
+    "topIntents": "أهم نوايا الاستفسارات",
+    "peakHours": "ساعات الذروة للدعم",
+    "satisfaction": "اتجاه رضا العملاء",
+    "recommendations": "توصيات للتحسين"
+  },
+  "seconds": "ثانية",
+  "minutes": "دقيقة"
+}

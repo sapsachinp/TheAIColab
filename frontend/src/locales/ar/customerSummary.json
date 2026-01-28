@@ -1,0 +1,43 @@
+{
+  "title": "ملخص حساب العميل",
+  "accountHealth": {
+    "title": "صحة الحساب",
+    "score": "النقاط",
+    "reasons": "الأسباب",
+    "recommendations": "التوصيات"
+  },
+  "billing": {
+    "nextBill": "الفاتورة القادمة (متوقعة)",
+    "lastBill": "آخر فاتورة",
+    "dueDate": "تاريخ الاستحقاق",
+    "paymentHistory": "سجل الدفع",
+    "aed": "درهم"
+  },
+  "consumption": {
+    "title": "رؤى الاستهلاك",
+    "history": "سجل الاستهلاك",
+    "patterns": "أنماط الاستخدام",
+    "peakHours": "ساعات الذروة",
+    "averageDaily": "المتوسط اليومي",
+    "comparison": "مقارنة بالعملاء المشابهين",
+    "kwh": "كيلووات ساعة",
+    "month": "الشهر",
+    "amount": "المبلغ"
+  },
+  "complaints": {
+    "title": "الشكاوى المفتوحة",
+    "ticketId": "رقم التذكرة",
+    "subject": "الموضوع",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "createdAt": "تاريخ الإنشاء",
+    "noComplaints": "لا توجد شكاوى مفتوحة"
+  },
+  "contact": {
+    "title": "معلومات الاتصال",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "accountNumber": "رقم الحساب",
+    "address": "العنوان"
+  }
+}

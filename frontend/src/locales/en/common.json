@@ -1,0 +1,48 @@
+{
+  "header": {
+    "title": "DEWA AI Support",
+    "subtitle": "Humanized Customer Service Platform",
+    "welcome": "Welcome",
+    "logout": "Logout"
+  },
+  "navigation": {
+    "summary": "Summary",
+    "newRequest": "New Request",
+    "chatSupport": "Chat Support",
+    "analytics": "Analytics"
+  },
+  "buttons": {
+    "send": "Send",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "back": "Back",
+    "signin": "Sign In",
+    "close": "Close",
+    "viewDetails": "View Details"
+  },
+  "status": {
+    "open": "Open",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "resolved": "Resolved",
+    "closed": "Closed",
+    "excellent": "Excellent",
+    "good": "Good",
+    "warning": "Warning",
+    "critical": "Critical",
+    "fair": "Fair",
+    "poor": "Poor"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "errors": {
+    "generic": "An error occurred. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "authentication": "Authentication failed. Please sign in again."
+  },
+  "loading": "Loading...",
+  "noData": "No data available"
+}

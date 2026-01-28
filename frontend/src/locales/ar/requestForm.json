@@ -1,0 +1,36 @@
+{
+  "title": "تقديم طلب جديد",
+  "subtitle": "إرشادات استباقية بالذكاء الاصطناعي",
+  "form": {
+    "requestType": "نوع الطلب",
+    "selectType": "اختر نوع الطلب...",
+    "description": "الوصف",
+    "descriptionPlaceholder": "صف مشكلتك أو طلبك بالتفصيل...",
+    "priority": "الأولوية"
+  },
+  "requestTypes": {
+    "bill_inquiry": "استفسار عن الفاتورة",
+    "service_outage": "انقطاع الخدمة",
+    "complaint": "شكوى عامة",
+    "meter_reading": "مشكلة في قراءة العداد",
+    "payment_issue": "مشكلة في الدفع",
+    "connection": "توصيل جديد",
+    "disconnection": "طلب فصل",
+    "other": "أخرى"
+  },
+  "aiGuidance": {
+    "title": "إرشادات الذكاء الاصطناعي",
+    "analyzing": "جاري تحليل طلبك...",
+    "canResolve": "يمكنني مساعدتك في حل هذا دون إنشاء تذكرة!",
+    "shouldProceed": "بناءً على تحليلي، قد ترغب في:",
+    "recommendation": "التوصية",
+    "confidence": "مستوى الثقة"
+  },
+  "actions": {
+    "submitAnyway": "تقديم على أي حال",
+    "followGuidance": "اتباع إرشادات الذكاء الاصطناعي",
+    "modifyRequest": "تعديل الطلب"
+  },
+  "success": "تم تقديم الطلب بنجاح!",
+  "error": "فشل تقديم الطلب. يرجى المحاولة مرة أخرى."
+}

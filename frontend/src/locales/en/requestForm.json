@@ -1,0 +1,36 @@
+{
+  "title": "Submit New Request",
+  "subtitle": "AI-Powered Proactive Guidance",
+  "form": {
+    "requestType": "Request Type",
+    "selectType": "Select request type...",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe your issue or request in detail...",
+    "priority": "Priority"
+  },
+  "requestTypes": {
+    "bill_inquiry": "Bill Inquiry",
+    "service_outage": "Service Outage",
+    "complaint": "General Complaint",
+    "meter_reading": "Meter Reading Issue",
+    "payment_issue": "Payment Issue",
+    "connection": "New Connection",
+    "disconnection": "Disconnection Request",
+    "other": "Other"
+  },
+  "aiGuidance": {
+    "title": "AI Guidance",
+    "analyzing": "Analyzing your request...",
+    "canResolve": "I can help you resolve this without creating a ticket!",
+    "shouldProceed": "Based on my analysis, you may want to:",
+    "recommendation": "Recommendation",
+    "confidence": "Confidence Level"
+  },
+  "actions": {
+    "submitAnyway": "Submit Anyway",
+    "followGuidance": "Follow AI Guidance",
+    "modifyRequest": "Modify Request"
+  },
+  "success": "Request submitted successfully!",
+  "error": "Failed to submit request. Please try again."
+}

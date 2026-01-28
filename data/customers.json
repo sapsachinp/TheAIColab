@@ -6,7 +6,33 @@
     "email": "ahmed.mansoori@example.com",
     "phone": "+971-50-123-4567",
     "accountNumber": "DEWA-001-2345",
+    "businessPartner": "BP-1001",
+    "businessPartnerName": "Al Mansoori Group",
     "address": "Dubai Marina, Tower A, Apt 1505",
+    "contractAccounts": [
+      {
+        "accountNumber": "DEWA-001-2345",
+        "address": "Dubai Marina, Tower A, Apt 1505",
+        "accountType": "Residential",
+        "outstandingAmount": 0,
+        "services": [
+          { "type": "Electricity", "status": "Active", "meterNumber": "E-12345" },
+          { "type": "Water", "status": "Active", "meterNumber": "W-12345" }
+        ]
+      },
+      {
+        "accountNumber": "DEWA-001-2346",
+        "address": "Business Bay, Office 304",
+        "accountType": "Commercial",
+        "outstandingAmount": 1250.50,
+        "services": [
+          { "type": "Electricity", "status": "Active", "meterNumber": "E-12346" },
+          { "type": "Water", "status": "Active", "meterNumber": "W-12346" },
+          { "type": "District Cooling", "status": "Active", "meterNumber": "DC-12346" }
+        ]
+      }
+    ],
+    "totalOutstandingDues": 1250.50,
     "accountHealth": {
       "status": "warning",
       "score": 68,
@@ -24,7 +50,8 @@
         "subjectAr": "فاتورة كهرباء عالية في ديسمبر",
         "status": "Open",
         "createdAt": "2026-01-20T10:30:00Z",
-        "priority": "Medium"
+        "priority": "Medium",
+        "accountNumber": "DEWA-001-2345"
       },
       {
         "ticketId": "T002",
@@ -32,7 +59,8 @@
         "subjectAr": "تناقض في قراءة عداد المياه",
         "status": "Pending",
         "createdAt": "2026-01-15T14:20:00Z",
-        "priority": "Low"
+        "priority": "Low",
+        "accountNumber": "DEWA-001-2345"
       }
     ],
     "predictedBill": 845.50,
@@ -63,7 +91,23 @@
     "email": "fatima.hassan@example.com",
     "phone": "+971-55-987-6543",
     "accountNumber": "DEWA-002-6789",
+    "businessPartner": "BP-1002",
+    "businessPartnerName": "Hassan Family",
     "address": "Jumeirah Beach Residence, Building 5, Apt 802",
+    "contractAccounts": [
+      {
+        "accountNumber": "DEWA-002-6789",
+        "address": "Jumeirah Beach Residence, Building 5, Apt 802",
+        "accountType": "Residential",
+        "outstandingAmount": 0,
+        "services": [
+          { "type": "Electricity", "status": "Active", "meterNumber": "E-67890" },
+          { "type": "Water", "status": "Active", "meterNumber": "W-67890" },
+          { "type": "Sewerage", "status": "Active", "meterNumber": "S-67890" }
+        ]
+      }
+    ],
+    "totalOutstandingDues": 0,
     "accountHealth": {
       "status": "excellent",
       "score": 95,

@@ -1,0 +1,29 @@
+{
+  "title": "DEWA AI Assistant",
+  "subtitle": "Voice & Text Support",
+  "placeholder": "Type your message or use voice...",
+  "voiceButton": {
+    "start": "Start Voice",
+    "stop": "Stop",
+    "listening": "Listening... Speak now"
+  },
+  "speaking": "Speaking...",
+  "stopSpeaking": "Stop Speaking",
+  "greeting": "Hello! I'm your DEWA AI Assistant. How can I help you today?",
+  "confidence": "Confidence",
+  "intent": "Intent",
+  "suggestions": "Quick Actions",
+  "escalated": "This conversation has been escalated to a human agent.",
+  "error": "Sorry, I encountered an error. Please try again or contact support.",
+  "intents": {
+    "billing_inquiry": "Billing Inquiry",
+    "bill_inquiry": "Bill Inquiry",
+    "service_outage": "Service Outage",
+    "complaint": "Complaint",
+    "advisory": "Advisory",
+    "meter_reading": "Meter Reading",
+    "payment": "Payment",
+    "connection_request": "Connection Request",
+    "unknown": "General Inquiry"
+  }
+}

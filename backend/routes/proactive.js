@@ -55,4 +55,50 @@ router.post('/guidance', verifyToken, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/proactive/explain-request
+ * Explain the selected request type with AI analysis
+ */
+router.post('/explain-request', verifyToken, async (req, res) => {
+  try {
+    const { customerId, requestType } = req.body;
+
+    if (!customerId || !requestType) {
+      return res.status(400).json({
+        error: 'Customer ID and request type are required'
+      });
+    }
+
+    // Load customer data for context
+    const customersData = await fs.readFile(
+      path.join(__dirname, '../../data/customers.json'),
+      'utf-8'
+    );
+    const customers = JSON.parse(customersData);
+    const customer = customers.find(c => c.id === customerId);
+
+    if (!customer) {
+      return res.status(404).json({
+        error: 'Customer not found'
+      });
+    }
+
+    // Get AI explanation from Unified Brain
+    const explanation = await unifiedBrain.explainRequestType({
+      customer,
+      requestType
+    });
+
+    res.json({
+      success: true,
+      explanation
+    });
+  } catch (error) {
+    console.error('Error generating request explanation:', error);
+    res.status(500).json({
+      error: 'Failed to generate explanation'
+    });
+  }
+});
+
 export default router;

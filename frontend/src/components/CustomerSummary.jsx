@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import axios from 'axios'
 
 export default function CustomerSummary({ customer }) {
@@ -111,6 +111,146 @@ export default function CustomerSummary({ customer }) {
         >
           Analytics
         </Link>
+      </div>
+
+      {/* Customer 360 Information */}
+      <div className="bg-gradient-to-br from-dewa-blue to-blue-600 text-white rounded-2xl shadow-xl p-6 mb-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold mb-1">Welcome, {customerData.name}</h1>
+            <p className="text-blue-100 text-sm">Business Partner: {customerData.businessPartnerName || customerData.businessPartner || 'N/A'}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-blue-100">Customer ID</p>
+            <p className="text-lg font-bold">{customerData.id}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          {/* Contract Accounts */}
+          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">📋</span>
+              <div>
+                <p className="text-xs text-blue-100">Contract Accounts</p>
+                <p className="text-2xl font-bold">{customerData.contractAccounts?.length || 1}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Total Services */}
+          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">⚡</span>
+              <div>
+                <p className="text-xs text-blue-100">Active Services</p>
+                <p className="text-2xl font-bold">
+                  {customerData.contractAccounts?.reduce((total, acc) => total + (acc.services?.length || 0), 0) || 2}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Open Requests */}
+          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">🎫</span>
+              <div>
+                <p className="text-xs text-blue-100">Open Requests</p>
+                <p className="text-2xl font-bold">{customerData.openComplaints?.length || 0}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Outstanding Dues */}
+          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">💰</span>
+              <div>
+                <p className="text-xs text-blue-100">Total Dues</p>
+                <p className={`text-2xl font-bold ${(customerData.totalOutstandingDues || 0) > 0 ? 'text-yellow-300' : ''}`}>
+                  AED {(customerData.totalOutstandingDues || 0).toFixed(2)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Contract Accounts Detail */}
+        {customerData.contractAccounts && customerData.contractAccounts.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-sm font-semibold mb-3 text-blue-100">Account Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {customerData.contractAccounts.map((account, idx) => (
+                <div key={idx} className="bg-white bg-opacity-10 rounded-lg p-3 backdrop-blur-sm border border-white border-opacity-20">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <p className="font-semibold text-sm">{account.accountNumber}</p>
+                      <p className="text-xs text-blue-100">{account.address}</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 bg-blue-500 bg-opacity-50 rounded text-xs">
+                        {account.accountType}
+                      </span>
+                    </div>
+                    {account.outstandingAmount > 0 && (
+                      <div className="text-right">
+                        <p className="text-xs text-yellow-300">Outstanding</p>
+                        <p className="text-sm font-bold text-yellow-300">AED {account.outstandingAmount.toFixed(2)}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {account.services?.map((service, sidx) => (
+                      <span key={sidx} className="px-2 py-0.5 bg-green-500 bg-opacity-40 rounded text-xs flex items-center gap-1">
+                        {service.type === 'Electricity' && '⚡'}
+                        {service.type === 'Water' && '💧'}
+                        {service.type === 'Sewerage' && '🚿'}
+                        {service.type === 'District Cooling' && '❄️'}
+                        {service.type}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Open Requests Summary */}
+        {customerData.openComplaints && customerData.openComplaints.length > 0 && (
+          <div className="mt-4 bg-white bg-opacity-10 rounded-lg p-4 backdrop-blur-sm border border-white border-opacity-20">
+            <h3 className="text-sm font-semibold mb-3 text-blue-100 flex items-center gap-2">
+              <span>📌</span> Active Requests
+            </h3>
+            <div className="space-y-2">
+              {customerData.openComplaints.map((complaint, idx) => (
+                <div key={idx} className="flex items-center justify-between text-sm">
+                  <div className="flex-1">
+                    <p className="font-medium">{complaint.ticketId}: {complaint.subject}</p>
+                    {complaint.accountNumber && (
+                      <p className="text-xs text-blue-200">Account: {complaint.accountNumber}</p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      complaint.status === 'Open' ? 'bg-yellow-500 bg-opacity-50' :
+                      complaint.status === 'Pending' ? 'bg-orange-500 bg-opacity-50' :
+                      'bg-green-500 bg-opacity-50'
+                    }`}>
+                      {complaint.status}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      complaint.priority === 'High' ? 'bg-red-500 bg-opacity-50' :
+                      complaint.priority === 'Medium' ? 'bg-orange-400 bg-opacity-50' :
+                      'bg-blue-500 bg-opacity-50'
+                    }`}>
+                      {complaint.priority}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Account Health Score */}

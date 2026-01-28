@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import Login from './components/Login'
 import CustomerSummary from './components/CustomerSummary'
 import RequestForm from './components/RequestForm'
 import Chatbot from './components/Chatbot'
 import Dashboard from './components/Dashboard'
+import LanguageSwitcher from './components/LanguageSwitcher'
 
 function App() {
+  const { t } = useTranslation('common')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [customer, setCustomer] = useState(null)
 
@@ -41,19 +44,20 @@ function App() {
         {isAuthenticated && (
           <header className="bg-dewa-dark text-white shadow-lg">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <div className="w-10 h-10 bg-dewa-green rounded-full flex items-center justify-center font-bold text-xl">
                   D
                 </div>
-                <h1 className="text-2xl font-bold">DEWA AI Support</h1>
+                <h1 className="text-2xl font-bold">{t('header.title')}</h1>
               </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm">Welcome, {customer?.name}</span>
+              <div className="flex items-center space-x-4 rtl:space-x-reverse">
+                <span className="text-sm">{t('header.welcome')}, {customer?.name}</span>
+                <LanguageSwitcher />
                 <button
                   onClick={handleLogout}
                   className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition"
                 >
-                  Logout
+                  {t('header.logout')}
                 </button>
               </div>
             </div>
