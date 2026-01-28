@@ -6,6 +6,7 @@ import CustomerSummary from './components/CustomerSummary'
 import RequestForm from './components/RequestForm'
 import Chatbot from './components/Chatbot'
 import Dashboard from './components/Dashboard'
+import BillPayment from './components/BillPayment'
 import LanguageSwitcher from './components/LanguageSwitcher'
 
 function App() {
@@ -111,6 +112,16 @@ function App() {
             element={
               isAuthenticated ? (
                 <Dashboard />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            path="/payment"
+            element={
+              isAuthenticated ? (
+                <BillPayment />
               ) : (
                 <Navigate to="/login" />
               )

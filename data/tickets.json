@@ -220,5 +220,79 @@
         "note": "Ticket created via web portal"
       }
     ]
+  },
+  {
+    "ticketId": "DEWA-1769590691812-4695",
+    "customerId": "C12345",
+    "requestType": "billing_inquiry",
+    "requestDetails": "I want to submit ticket for high consumption",
+    "aiGuidance": {
+      "intent": {
+        "category": "billing_inquiry",
+        "confidence": 0.9,
+        "reasoning": "The customer is raising an issue about high consumption which relates to their bill."
+      },
+      "proactiveAdvice": {
+        "suggestion": "Your request will be processed. We'll assign it to the appropriate team.",
+        "confidence": 0.5,
+        "shouldDeflect": false,
+        "reason": "needs_human_review"
+      },
+      "customerDataAnalysis": {
+        "billingSummary": {
+          "currentBill": 780.3,
+          "predictedBill": 845.5,
+          "variance": "8.4",
+          "trend": "increasing"
+        },
+        "consumptionInsights": {
+          "trend": "increasing",
+          "variance": 23.6,
+          "average": "684.06",
+          "latest": "845.50",
+          "comparedToSimilar": "+18% higher than similar homes"
+        },
+        "accountStatus": {
+          "openComplaints": 2,
+          "hasUnpaidBills": false,
+          "unpaidAmount": 0
+        },
+        "usagePatterns": {
+          "reason": "AC usage during winter months",
+          "peakHours": "14:00-18:00"
+        }
+      },
+      "situationAnalysis": "Ahmed Al Mansoori is a DEWA customer with a history of increasing consumption, as evidenced by the 23.6% variance in consumption trends. His last bill was AED 780.3, and the predicted next bill is AED 845.5. Ahmed has 2 open complaints and has requested to submit a ticket for high consumption, indicating concern about his utility usage.",
+      "rootCause": "The likely reason for Ahmed's request to submit a ticket for high consumption could be due to his awareness of the increasing trend in his utility usage and the potential impact on his bills. He may be seeking assistance in understanding the reasons behind his high consumption and looking for ways to manage it effectively.",
+      "recommendations": [
+        "Schedule a home energy audit to identify areas of high energy consumption and potential inefficiencies.",
+        "Provide Ahmed with personalized tips on energy-saving practices tailored to his usage patterns.",
+        "Encourage Ahmed to monitor his daily consumption through the DEWA app and set usage targets to track his progress."
+      ],
+      "priority": "urgent",
+      "customerImpact": "Ahmed's high consumption could lead to consistently high bills and financial strain. Addressing his concerns promptly can help him better manage his utility usage and potentially reduce future bills.",
+      "shouldProceed": true,
+      "aiPowered": true,
+      "timestamp": "2026-01-28T08:57:37.013Z"
+    },
+    "status": "Open",
+    "priority": "Urgent",
+    "createdAt": "2026-01-28T08:58:11.813Z",
+    "updatedAt": "2026-01-28T08:58:11.813Z",
+    "aiRecommendations": [
+      "Schedule a home energy audit to identify areas of high energy consumption and potential inefficiencies.",
+      "Provide Ahmed with personalized tips on energy-saving practices tailored to his usage patterns.",
+      "Encourage Ahmed to monitor his daily consumption through the DEWA app and set usage targets to track his progress."
+    ],
+    "channel": "web",
+    "assignedTo": null,
+    "notes": [],
+    "statusHistory": [
+      {
+        "status": "Open",
+        "timestamp": "2026-01-28T08:58:11.813Z",
+        "note": "Ticket created via web portal"
+      }
+    ]
   }
 ]

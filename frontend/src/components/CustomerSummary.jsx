@@ -527,14 +527,14 @@ export default function CustomerSummary({ customer }) {
           <h4 className="font-bold text-lg mb-1">Chat with AI</h4>
           <p className="text-sm opacity-90">Voice & text support</p>
         </Link>
-        <button
-          onClick={() => window.open('https://www.dewa.gov.ae/en/consumer/billing/pay-bill', '_blank')}
-          className="block bg-orange-500 hover:bg-orange-600 text-white rounded-xl p-6 text-center transition w-full"
+        <Link
+          to="/payment"
+          className="block bg-orange-500 hover:bg-orange-600 text-white rounded-xl p-6 text-center transition"
         >
           <div className="text-3xl mb-2">💳</div>
           <h4 className="font-bold text-lg mb-1">Pay Bill Now</h4>
-          <p className="text-sm opacity-90">Multiple payment options</p>
-        </button>
+          <p className="text-sm opacity-90">Secure DEWA payment portal</p>
+        </Link>
       </div>
     </div>
   )
