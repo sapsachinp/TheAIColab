@@ -26,8 +26,11 @@ const users = [
   { email: 'mohammed@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C11223', mfaEnabled: true },
   { email: 'mohammed.hashimi@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C11223', mfaEnabled: true },
   { email: 'sara@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C44556', mfaEnabled: true },
+  { email: 'sara.alzaabi@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C44556', mfaEnabled: true },
   { email: 'omar@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C77889', mfaEnabled: true },
-  { email: 'layla@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C99001', mfaEnabled: true }
+  { email: 'omar.khalil@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C77889', mfaEnabled: true },
+  { email: 'layla@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C99001', mfaEnabled: true },
+  { email: 'layla.mahmoud@example.com', password: DEMO_PASSWORD_HASH, customerId: 'C99001', mfaEnabled: true }
 ];
 
 /**

@@ -125,12 +125,12 @@ export default function Login({ onLogin }) {
   }
 
   const demoAccounts = [
-    { email: 'ahmed@example.com', name: 'Ahmed (Warning - Bill Spike)', password: 'password123' },
-    { email: 'fatima@example.com', name: 'Fatima (Excellent - Model Customer)', password: 'password123' },
-    { email: 'mohammed@example.com', name: 'Mohammed (Good - Villa Owner)', password: 'password123' },
-    { email: 'sara@example.com', name: 'Sara (Critical - Overdue)', password: 'password123' },
-    { email: 'omar@example.com', name: 'Omar (Good - Commercial)', password: 'password123' },
-    { email: 'layla@example.com', name: 'Layla (Excellent - Star Customer)', password: 'password123' }
+    { email: 'ahmed.mansoori@example.com', name: 'Ahmed (Warning - Bill Spike)', password: 'password123' },
+    { email: 'fatima.hassan@example.com', name: 'Fatima (Excellent - Model Customer)', password: 'password123' },
+    { email: 'mohammed.hashimi@example.com', name: 'Mohammed (Good - Villa Owner)', password: 'password123' },
+    { email: 'sara.alzaabi@example.com', name: 'Sara (Critical - Overdue)', password: 'password123' },
+    { email: 'omar.khalil@example.com', name: 'Omar (Good - Commercial)', password: 'password123' },
+    { email: 'layla.mahmoud@example.com', name: 'Layla (Excellent - Star Customer)', password: 'password123' }
   ]
 
   const formatTime = (seconds) => {

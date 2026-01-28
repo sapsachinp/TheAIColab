@@ -4,9 +4,9 @@ import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, Cartesia
 import axios from 'axios'
 import { motion } from 'framer-motion'
 import { 
-  User, FileText, Zap, Droplets, AlertCircle, TrendingUp, 
-  CreditCard, Phone, MapPin, Calendar, Award, BarChart3,
-  MessageSquare, FileCheck, DollarSign, Activity, Shield
+  User, FileText, Zap, AlertCircle, TrendingUp, Brain,
+  CreditCard, Award, BarChart3,
+  MessageSquare, FileCheck, Activity, Shield
 } from 'lucide-react'
 
 export default function CustomerSummary({ customer }) {
@@ -127,11 +127,174 @@ export default function CustomerSummary({ customer }) {
         </Link>
       </motion.div>
 
+      {/* AI Predictions & Account Behavior - Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden"
+      >
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full -ml-40 -mb-40 blur-3xl" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-6">
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg"
+            >
+              <Brain className="w-8 h-8" />
+            </motion.div>
+            <div>
+              <h2 className="text-3xl font-bold">AI-Powered Account Intelligence</h2>
+              <p className="text-purple-100">Predictive insights for smarter decisions</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* Next Month Prediction */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/15 backdrop-blur-xl rounded-2xl p-6 border-2 border-white/30 hover:bg-white/20 transition-all"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl">
+                  <TrendingUp className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-purple-100">Next Month Prediction</p>
+                  <p className="text-xs text-purple-200">AI Confidence: {((aiInsights?.billPrediction?.confidence || 0.85) * 100).toFixed(0)}%</p>
+                </div>
+              </div>
+              <div className="text-5xl font-bold mb-2">
+                AED {aiInsights?.billPrediction?.predicted || customerData.predictedBill}
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  (aiInsights?.billPrediction?.trend || 'stable') === 'increasing' 
+                    ? 'bg-red-400/30 text-red-100' 
+                    : (aiInsights?.billPrediction?.trend || 'stable') === 'decreasing'
+                    ? 'bg-green-400/30 text-green-100'
+                    : 'bg-blue-400/30 text-blue-100'
+                }`}>
+                  {(aiInsights?.billPrediction?.trend || 'stable') === 'increasing' && '↗'}
+                  {(aiInsights?.billPrediction?.trend || 'stable') === 'decreasing' && '↘'}
+                  {(aiInsights?.billPrediction?.trend || 'stable') === 'stable' && '→'}
+                  {' '}{(aiInsights?.billPrediction?.trend || 'stable').charAt(0).toUpperCase() + (aiInsights?.billPrediction?.trend || 'stable').slice(1)}
+                </span>
+              </div>
+              <p className="text-sm text-purple-100 mt-2">vs Last: AED {customerData.lastBill}</p>
+            </motion.div>
+
+            {/* Account Behavior Analysis */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/15 backdrop-blur-xl rounded-2xl p-6 border-2 border-white/30 hover:bg-white/20 transition-all"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-2 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl">
+                  <Activity className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-purple-100">Consumption Behavior</p>
+                  <p className="text-xs text-purple-200">AI Analysis</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm text-purple-100 mb-1">Trend</p>
+                  <p className="text-2xl font-bold capitalize">
+                    {aiInsights?.consumptionAnalysis?.trend || 'Stable'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-purple-100 mb-1">Variance</p>
+                  <p className={`text-2xl font-bold ${
+                    Math.abs(aiInsights?.consumptionAnalysis?.variance || 0) > 15 
+                      ? 'text-red-300' 
+                      : 'text-green-300'
+                  }`}>
+                    {aiInsights?.consumptionAnalysis?.variance > 0 ? '+' : ''}{aiInsights?.consumptionAnalysis?.variance || 0}%
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Key Decision Factors */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white/15 backdrop-blur-xl rounded-2xl p-6 border-2 border-white/30 hover:bg-white/20 transition-all"
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <div className="p-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl">
+                  <Award className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-purple-100">Account Health</p>
+                  <p className="text-xs text-purple-200">Status Score</p>
+                </div>
+              </div>
+              <div className="text-5xl font-bold mb-3">
+                {customerData.accountHealth?.score || 85}
+                <span className="text-2xl text-purple-200">/100</span>
+              </div>
+              <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${customerData.accountHealth?.score || 85}%` }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  className={`h-full rounded-full ${
+                    (customerData.accountHealth?.score || 85) >= 80 
+                      ? 'bg-gradient-to-r from-green-400 to-emerald-500'
+                      : (customerData.accountHealth?.score || 85) >= 60
+                      ? 'bg-gradient-to-r from-yellow-400 to-orange-500'
+                      : 'bg-gradient-to-r from-red-400 to-rose-500'
+                  }`}
+                />
+              </div>
+              <p className="text-sm text-purple-100 mt-3 capitalize">
+                {getHealthLabel(customerData.accountHealth?.status || 'good')}
+              </p>
+            </motion.div>
+          </div>
+
+          {/* AI Insights Summary */}
+          {aiInsights?.consumptionAnalysis?.reason && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-md rounded-2xl p-5 border border-yellow-300/30"
+            >
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-yellow-400/30 rounded-lg">
+                  <Shield className="w-5 h-5 text-yellow-100" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-lg mb-2">💡 AI Account Behavior Summary</h4>
+                  <p className="text-purple-50 leading-relaxed">
+                    {aiInsights.consumptionAnalysis.reason}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
+
       {/* Customer 360 Information */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.1 }}
+        transition={{ delay: 0.6 }}
         className="bg-gradient-to-br from-dewa-blue via-blue-600 to-blue-700 text-white rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden"
       >
         {/* Background decoration */}
@@ -483,51 +646,164 @@ export default function CustomerSummary({ customer }) {
         </div>
       </div>
 
-      {/* Historical Consumption Chart */}
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-        <h3 className="text-lg font-bold text-gray-800 mb-4">Consumption History & Prediction</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={customerData.consumptionHistory}>
-            <CartesianGrid strokeDasharray="3 3" />
+      {/* Historical Consumption Chart with Predictions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+        className="bg-white rounded-3xl shadow-xl p-8 mb-8 border border-gray-100"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Consumption Forecast</h3>
+            <p className="text-sm text-gray-600">Historical data with AI-powered predictions</p>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-0.5 bg-dewa-green"></div>
+              <span className="text-gray-600">Actual Bill</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-0.5 bg-dewa-blue"></div>
+              <span className="text-gray-600">Actual Usage</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-0.5 bg-purple-500 border-t-2 border-dashed border-purple-500"></div>
+              <span className="text-gray-600">AI Prediction</span>
+            </div>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart 
+            data={[
+              ...(customerData.consumptionHistory || []),
+              ...((customerData.consumptionHistory && customerData.consumptionHistory.length > 0) ? [{
+                month: new Date(new Date(customerData.consumptionHistory[customerData.consumptionHistory.length - 1]?.month + '-01').setMonth(new Date(customerData.consumptionHistory[customerData.consumptionHistory.length - 1]?.month + '-01').getMonth() + 1)).toISOString().slice(0, 7),
+                amount: Number.parseFloat(aiInsights?.billPrediction?.predicted || customerData.predictedBill),
+                kwh: Math.round((Number.parseFloat(aiInsights?.billPrediction?.predicted || customerData.predictedBill) / 0.38) * 100) / 100,
+                predicted: true
+              }] : [])
+            ]}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
             <XAxis 
               dataKey="month" 
               tickFormatter={(month) => new Date(month + '-01').toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
+              tick={{ fill: '#6b7280' }}
+              tickLine={{ stroke: '#d1d5db' }}
             />
-            <YAxis yAxisId="left" label={{ value: 'AED', angle: -90, position: 'insideLeft' }} />
-            <YAxis yAxisId="right" orientation="right" label={{ value: 'kWh', angle: 90, position: 'insideRight' }} />
+            <YAxis 
+              yAxisId="left" 
+              label={{ value: 'Bill Amount (AED)', angle: -90, position: 'insideLeft', style: { fill: '#6b7280' } }}
+              tick={{ fill: '#6b7280' }}
+              tickLine={{ stroke: '#d1d5db' }}
+            />
+            <YAxis 
+              yAxisId="right" 
+              orientation="right" 
+              label={{ value: 'Usage (kWh)', angle: 90, position: 'insideRight', style: { fill: '#6b7280' } }}
+              tick={{ fill: '#6b7280' }}
+              tickLine={{ stroke: '#d1d5db' }}
+            />
             <Tooltip 
-              formatter={(value, name) => [
-                name === 'amount' ? `AED ${value}` : `${value} kWh`,
-                name === 'amount' ? 'Bill' : 'Usage'
-              ]}
+              formatter={(value, name, props) => {
+                const isPredicted = props.payload.predicted
+                return [
+                  name === 'amount' 
+                    ? `${isPredicted ? '(Predicted) ' : ''}AED ${value}` 
+                    : `${isPredicted ? '(Predicted) ' : ''}${value} kWh`,
+                  name === 'amount' ? 'Bill Amount' : 'kWh Usage'
+                ]
+              }}
               labelFormatter={(month) => new Date(month + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+              contentStyle={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.98)', 
+                border: '1px solid #e5e7eb',
+                borderRadius: '12px',
+                padding: '12px',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+              }}
             />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ paddingTop: '20px' }}
+              iconType="line"
+            />
             <Line 
               yAxisId="left"
               type="monotone" 
               dataKey="amount" 
               stroke="#00A651" 
-              strokeWidth={2}
+              strokeWidth={3}
               name="Bill Amount"
-              dot={{ fill: '#00A651' }}
+              dot={(props) => {
+                const { cx, cy, payload } = props
+                return (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={payload.predicted ? 6 : 5}
+                    fill={payload.predicted ? '#8b5cf6' : '#00A651'}
+                    stroke="white"
+                    strokeWidth={2}
+                  />
+                )
+              }}
+              strokeDasharray={(entry) => entry?.predicted ? "8 8" : "0"}
+              activeDot={{ r: 8, fill: '#00A651', stroke: 'white', strokeWidth: 2 }}
             />
             <Line 
               yAxisId="right"
               type="monotone" 
               dataKey="kwh" 
               stroke="#0072BC" 
-              strokeWidth={2}
+              strokeWidth={3}
               name="kWh Usage"
-              dot={{ fill: '#0072BC' }}
-              strokeDasharray={(entry) => entry.predicted ? "5 5" : "0"}
+              dot={(props) => {
+                const { cx, cy, payload } = props
+                return (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={payload.predicted ? 6 : 5}
+                    fill={payload.predicted ? '#8b5cf6' : '#0072BC'}
+                    stroke="white"
+                    strokeWidth={2}
+                  />
+                )
+              }}
+              strokeDasharray={(entry) => entry?.predicted ? "8 8" : "0"}
+              activeDot={{ r: 8, fill: '#0072BC', stroke: 'white', strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>
-        <p className="text-xs text-gray-500 mt-2 text-center">
-          Dotted line indicates AI prediction based on historical patterns and seasonal factors
-        </p>
-      </div>
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+              <p className="text-sm text-gray-600 mb-1">Average Monthly Bill</p>
+              <p className="text-2xl font-bold text-gray-900">
+                AED {customerData.consumptionHistory && customerData.consumptionHistory.length > 0 
+                  ? (customerData.consumptionHistory.reduce((sum, item) => sum + item.amount, 0) / customerData.consumptionHistory.length).toFixed(2)
+                  : '0.00'}
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 border border-blue-200">
+              <p className="text-sm text-gray-600 mb-1">Average Monthly Usage</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {customerData.consumptionHistory && customerData.consumptionHistory.length > 0
+                  ? Math.round(customerData.consumptionHistory.reduce((sum, item) => sum + item.kwh, 0) / customerData.consumptionHistory.length)
+                  : 0} kWh
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+              <p className="text-sm text-gray-600 mb-1">Next Month Forecast</p>
+              <p className="text-2xl font-bold text-purple-600">
+                AED {aiInsights?.billPrediction?.predicted || customerData.predictedBill}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Dotted line in chart</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* AI Recommendations / Tips */}
       {customerData.accountHealth?.recommendations && customerData.accountHealth.recommendations.length > 0 && (
