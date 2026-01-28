@@ -3,6 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { useLanguage } from '../contexts/LanguageContext'
 import axios from 'axios'
 import LanguageSwitcher from './LanguageSwitcher'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Lock, Mail, Eye, EyeOff, Shield, Sparkles, Check, 
+  TrendingUp, Globe, Brain, Users, MessageCircle, 
+  Target, BarChart3, Zap
+} from 'lucide-react'
 
 export default function Login({ onLogin }) {
   const { t } = useTranslation('common')
@@ -17,6 +23,7 @@ export default function Login({ onLogin }) {
   const [countdown, setCountdown] = useState(0)
   const [resendCooldown, setResendCooldown] = useState(0)
   const [showFeatures, setShowFeatures] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // Countdown timer for OTP expiry
   useEffect(() => {
@@ -133,14 +140,14 @@ export default function Login({ onLogin }) {
   }
 
   const features = [
-    { icon: '🌐', nameEn: 'Bilingual UI', nameAr: 'واجهة ثنائية اللغة', descEn: 'English/Arabic with RTL support', descAr: 'إنجليزي/عربي مع دعم RTL' },
-    { icon: '🔐', nameEn: 'MFA Security', nameAr: 'الأمان متعدد العوامل', descEn: 'Email OTP authentication', descAr: 'مصادقة OTP عبر البريد الإلكتروني' },
-    { icon: '🤖', nameEn: 'AI-Powered', nameAr: 'مدعوم بالذكاء الاصطناعي', descEn: 'OpenAI predictions & insights', descAr: 'تنبؤات ورؤى OpenAI' },
-    { icon: '👤', nameEn: 'Customer 360', nameAr: 'عرض 360 للعميل', descEn: 'Business partner & accounts', descAr: 'شريك الأعمال والحسابات' },
-    { icon: '💬', nameEn: 'Multi-Channel', nameAr: 'متعدد القنوات', descEn: 'Web form & chat support', descAr: 'نموذج الويب ودعم الدردشة' },
-    { icon: '🎯', nameEn: 'AI Guidance', nameAr: 'إرشادات الذكاء الاصطناعي', descEn: 'Smart request analysis', descAr: 'تحليل ذكي للطلبات' },
-    { icon: '📊', nameEn: 'Cost Savings', nameAr: 'توفير التكاليف', descEn: 'Analytics & ROI tracking', descAr: 'تحليلات وتتبع العائد' },
-    { icon: '🎫', nameEn: 'Ticket System', nameAr: 'نظام التذاكر', descEn: 'Track & manage requests', descAr: 'تتبع وإدارة الطلبات' }
+    { icon: Globe, nameEn: 'Bilingual UI', nameAr: 'واجهة ثنائية اللغة', descEn: 'English/Arabic with RTL support', descAr: 'إنجليزي/عربي مع دعم RTL' },
+    { icon: Shield, nameEn: 'MFA Security', nameAr: 'الأمان متعدد العوامل', descEn: 'Email OTP authentication', descAr: 'مصادقة OTP عبر البريد الإلكتروني' },
+    { icon: Brain, nameEn: 'AI-Powered', nameAr: 'مدعوم بالذكاء الاصطناعي', descEn: 'OpenAI predictions & insights', descAr: 'تنبؤات ورؤى OpenAI' },
+    { icon: Users, nameEn: 'Customer 360', nameAr: 'عرض 360 للعميل', descEn: 'Business partner & accounts', descAr: 'شريك الأعمال والحسابات' },
+    { icon: MessageCircle, nameEn: 'Multi-Channel', nameAr: 'متعدد القنوات', descEn: 'Web form & chat support', descAr: 'نموذج الويب ودعم الدردشة' },
+    { icon: Target, nameEn: 'AI Guidance', nameAr: 'إرشادات الذكاء الاصطناعي', descEn: 'Smart request analysis', descAr: 'تحليل ذكي للطلبات' },
+    { icon: TrendingUp, nameEn: 'Cost Savings', nameAr: 'توفير التكاليف', descEn: 'Analytics & ROI tracking', descAr: 'تحليلات وتتبع العائد' },
+    { icon: BarChart3, nameEn: 'Ticket System', nameAr: 'نظام التذاكر', descEn: 'Track & manage requests', descAr: 'تتبع وإدارة الطلبات' }
   ]
 
   const successMetrics = [
@@ -151,229 +158,382 @@ export default function Login({ onLogin }) {
   ]
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-dewa-blue to-dewa-dark p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-dewa-blue via-blue-600 to-dewa-dark p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute -top-40 -left-40 w-80 h-80 bg-dewa-green/10 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            rotate: [0, -90, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 bg-white/5 rounded-full blur-3xl"
+        />
+      </div>
+
       {/* Features Showcase Panel - Desktop Only */}
-      <div className="hidden lg:block bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 w-full max-w-sm mr-6 text-white">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-            <span className="text-3xl">✨</span>
-            {language === 'en' ? 'Platform Features' : 'ميزات المنصة'}
-          </h2>
-          <p className="text-white/80 text-sm">
+      <motion.div 
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="hidden lg:block bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 w-full max-w-md mr-8 text-white border border-white/20 relative z-10"
+      >
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 bg-gradient-to-br from-dewa-green to-emerald-500 rounded-xl">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <h2 className="text-3xl font-bold">
+              {language === 'en' ? 'Platform Features' : 'ميزات المنصة'}
+            </h2>
+          </div>
+          <p className="text-white/80 text-base">
             {language === 'en' ? 'AI-powered customer service excellence' : 'التميز في خدمة العملاء بالذكاء الاصطناعي'}
           </p>
         </div>
 
         {/* Features List */}
-        <div className="space-y-3 mb-6">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-start gap-3 bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 hover:bg-white/10 transition">
-              <span className="text-2xl flex-shrink-0">{feature.icon}</span>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-sm">
-                  {language === 'en' ? feature.nameEn : feature.nameAr}
-                </h3>
-                <p className="text-xs text-white/70">
-                  {language === 'en' ? feature.descEn : feature.descAr}
-                </p>
-              </div>
-              <svg className="w-5 h-5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          ))}
+        <div className="space-y-3 mb-8">
+          {features.map((feature, index) => {
+            const IconComponent = feature.icon
+            return (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.3 }}
+                className="flex items-start gap-4 bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group"
+              >
+                <div className="p-2 bg-gradient-to-br from-dewa-green/20 to-emerald-500/20 rounded-lg group-hover:from-dewa-green/30 group-hover:to-emerald-500/30 transition-all">
+                  <IconComponent className="w-5 h-5 text-dewa-green" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-base mb-1">
+                    {language === 'en' ? feature.nameEn : feature.nameAr}
+                  </h3>
+                  <p className="text-sm text-white/70 leading-relaxed">
+                    {language === 'en' ? feature.descEn : feature.descAr}
+                  </p>
+                </div>
+                <Check className="w-5 h-5 text-dewa-green flex-shrink-0 mt-1" strokeWidth={3} />
+              </motion.div>
+            )
+          })}
         </div>
 
         {/* Success Criteria */}
-        <div className="pt-4 border-t border-white/20">
-          <h3 className="text-lg font-bold mb-3 flex items-center gap-2">
-            <span className="text-xl">🎯</span>
-            {language === 'en' ? 'Success Metrics' : 'مقاييس النجاح'}
-          </h3>
+        <div className="pt-6 border-t border-white/20">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-1.5 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg">
+              <Target className="w-5 h-5 text-amber-400" />
+            </div>
+            <h3 className="text-xl font-bold">
+              {language === 'en' ? 'Success Metrics' : 'مقاييس النجاح'}
+            </h3>
+          </div>
           <div className="grid grid-cols-2 gap-3">
             {successMetrics.map((metric, index) => (
-              <div key={index} className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10">
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 + index * 0.1 }}
+                className="bg-white/5 backdrop-blur-sm p-4 rounded-xl border border-white/10 hover:border-white/20 transition-all"
+              >
                 <p className="text-xs text-white/70 mb-1">
                   {language === 'en' ? metric.labelEn : metric.labelAr}
                 </p>
-                <p className={`text-lg font-bold ${metric.color}`}>
+                <p className={`text-xl font-bold ${metric.color}`}>
                   {metric.value}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
         {/* Achievement Badge */}
-        <div className="mt-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 backdrop-blur-sm p-4 rounded-lg border border-green-400/30">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-2xl">🏆</span>
-            <p className="font-bold text-sm">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="mt-6 bg-gradient-to-r from-dewa-green/20 to-emerald-500/20 backdrop-blur-sm p-5 rounded-xl border border-dewa-green/30"
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <Zap className="w-6 h-6 text-dewa-green" />
+            <p className="font-bold text-base">
               {language === 'en' ? 'Implementation Complete' : 'اكتمال التنفيذ'}
             </p>
           </div>
-          <p className="text-xs text-white/80">
+          <p className="text-sm text-white/80">
             {language === 'en' 
               ? 'All features successfully deployed and tested' 
               : 'تم نشر واختبار جميع الميزات بنجاح'}
           </p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="bg-white rounded-3xl shadow-2xl p-8 md:p-10 w-full max-w-lg relative z-10"
+      >
         {/* Mobile Features Toggle Button */}
-        <button
+        <motion.button
+          whileTap={{ scale: 0.98 }}
           onClick={() => setShowFeatures(!showFeatures)}
-          className="lg:hidden w-full mb-4 px-4 py-2 bg-gradient-to-r from-dewa-green to-green-600 text-white rounded-lg flex items-center justify-between hover:shadow-lg transition"
+          className="lg:hidden w-full mb-6 px-5 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl flex items-center justify-between hover:shadow-lg transition-shadow"
         >
           <span className="flex items-center gap-2">
-            <span className="text-xl">✨</span>
+            <Sparkles className="w-5 h-5" />
             <span className="font-semibold">
               {language === 'en' ? 'View Platform Features' : 'عرض ميزات المنصة'}
             </span>
           </span>
-          <svg 
-            className={`w-5 h-5 transition-transform ${showFeatures ? 'rotate-180' : ''}`}
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
+          <motion.div
+            animate={{ rotate: showFeatures ? 180 : 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </motion.div>
+        </motion.button>
 
         {/* Mobile Features Panel */}
-        {showFeatures && (
-          <div className="lg:hidden mb-6 p-4 bg-gradient-to-br from-dewa-blue/5 to-dewa-dark/5 rounded-xl border border-dewa-blue/20">
-            <div className="space-y-2 mb-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <span className="text-lg">{feature.icon}</span>
-                  <span className="font-medium text-gray-800">
-                    {language === 'en' ? feature.nameEn : feature.nameAr}
-                  </span>
-                  <svg className="w-4 h-4 text-green-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-gray-200">
-              {successMetrics.map((metric, index) => (
-                <div key={index} className="text-center p-2 bg-white rounded-lg">
-                  <p className="text-xs text-gray-600 mb-1">
-                    {language === 'en' ? metric.labelEn : metric.labelAr}
-                  </p>
-                  <p className={`text-sm font-bold ${metric.color}`}>
-                    {metric.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {showFeatures && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="lg:hidden mb-6 p-5 bg-gradient-to-br from-dewa-blue/5 to-dewa-dark/5 rounded-xl border border-dewa-blue/20 overflow-hidden"
+            >
+              <div className="space-y-3 mb-5">
+                {features.map((feature, index) => {
+                  const IconComponent = feature.icon
+                  return (
+                    <div key={index} className="flex items-center gap-3 text-sm">
+                      <div className="p-2 bg-gradient-to-br from-dewa-green/10 to-emerald-500/10 rounded-lg">
+                        <IconComponent className="w-4 h-4 text-dewa-green" />
+                      </div>
+                      <span className="font-medium text-gray-800 flex-1">
+                        {language === 'en' ? feature.nameEn : feature.nameAr}
+                      </span>
+                      <Check className="w-4 h-4 text-dewa-green" strokeWidth={3} />
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-gray-200">
+                {successMetrics.map((metric, index) => (
+                  <div key={index} className="text-center p-3 bg-white rounded-lg shadow-sm">
+                    <p className="text-xs text-gray-600 mb-1">
+                      {language === 'en' ? metric.labelEn : metric.labelAr}
+                    </p>
+                    <p className={`text-base font-bold ${metric.color}`}>
+                      {metric.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Language Switcher - Top Right */}
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end mb-6">
           <LanguageSwitcher />
         </div>
 
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 bg-dewa-green rounded-full flex items-center justify-center">
-            <span className="text-white text-4xl font-bold">D</span>
-          </div>
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
+            className="w-24 h-24 bg-gradient-to-br from-dewa-green to-emerald-600 rounded-3xl flex items-center justify-center shadow-xl relative"
+          >
+            <span className="text-white text-5xl font-bold">D</span>
+            <motion.div
+              animate={{ 
+                boxShadow: [
+                  "0 0 0 0 rgba(0, 166, 81, 0.4)",
+                  "0 0 0 20px rgba(0, 166, 81, 0)",
+                ]
+              }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute inset-0 rounded-3xl"
+            />
+          </motion.div>
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-dewa-dark mb-2">
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="text-4xl font-bold text-center text-dewa-dark mb-2"
+        >
           {t('header.title')}
-        </h1>
-        <p className="text-center text-gray-600 mb-8">
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="text-center text-gray-600 mb-8 text-lg"
+        >
           {t('header.subtitle')}
-        </p>
+        </motion.p>
 
         {/* Security Badge */}
-        <div className="flex items-center justify-center gap-2 mb-6 text-sm text-gray-600">
-          <svg className="w-5 h-5 text-dewa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <span>{language === 'en' ? 'Secured with MFA' : 'محمي بالمصادقة متعددة العوامل'}</span>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="flex items-center justify-center gap-2 mb-8 px-4 py-2 bg-dewa-green/5 rounded-full text-sm text-gray-700 w-fit mx-auto border border-dewa-green/20"
+        >
+          <Shield className="w-5 h-5 text-dewa-green" />
+          <span className="font-medium">{language === 'en' ? 'Secured with MFA' : 'محمي بالمصادقة متعددة العوامل'}</span>
+        </motion.div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-3"
+            >
+              <div className="w-5 h-5 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-red-600 text-xs font-bold">!</span>
+              </div>
+              <span className="text-sm">{error}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {!mfaRequired ? (
           // Step 1: Email & Password
           <>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   {language === 'en' ? 'Email Address' : 'البريد الإلكتروني'}
                 </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dewa-green focus:border-transparent"
-                  placeholder="your.email@example.com"
-                  required
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-dewa-green focus:border-transparent transition-all outline-none"
+                    placeholder="your.email@example.com"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   {language === 'en' ? 'Password' : 'كلمة المرور'}
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dewa-green focus:border-transparent"
-                  placeholder="••••••••"
-                  required
-                />
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-dewa-green focus:border-transparent transition-all outline-none"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 type="submit"
                 disabled={loading}
-                className="w-full bg-dewa-green hover:bg-green-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-dewa-green to-emerald-600 hover:from-dewa-green hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-dewa-green/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading && (
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  >
+                    <svg className="h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </motion.div>
                 )}
                 {loading ? t('loading') : t('buttons.signin')}
-              </button>
+              </motion.button>
             </form>
 
             {/* Demo Accounts */}
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600 mb-3 font-medium">
+              <p className="text-sm text-gray-600 mb-4 font-semibold flex items-center gap-2">
+                <Users className="w-4 h-4" />
                 {language === 'en' ? 'Demo Accounts:' : 'حسابات تجريبية:'}
               </p>
-              <div className="space-y-2">
-                {demoAccounts.map((account) => (
-                  <button
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {demoAccounts.map((account, index) => (
+                  <motion.button
                     key={account.email}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.7 + index * 0.05 }}
+                    whileHover={{ scale: 1.01, x: 4 }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => {
                       setEmail(account.email)
                       setPassword(account.password)
                     }}
-                    className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 transition"
+                    className="w-full text-left px-4 py-3 text-sm bg-gradient-to-r from-gray-50 to-gray-100 hover:from-dewa-green/5 hover:to-emerald-50 rounded-xl border-2 border-gray-200 hover:border-dewa-green/30 transition-all group"
                   >
-                    <div className="font-medium text-gray-900">{account.name}</div>
-                    <div className="text-gray-500 text-xs flex justify-between">
-                      <span>{account.email}</span>
-                      <span className="text-dewa-green">pw: {account.password}</span>
+                    <div className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-dewa-blue to-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-bold">
+                        {account.name.charAt(0)}
+                      </div>
+                      <span>{account.name}</span>
                     </div>
-                  </button>
+                    <div className="text-gray-500 text-xs flex justify-between items-center pl-10">
+                      <span className="font-mono">{account.email}</span>
+                      <span className="text-dewa-green font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                        Click to use
+                      </span>
+                    </div>
+                  </motion.button>
                 ))}
               </div>
             </div>
@@ -381,37 +541,53 @@ export default function Login({ onLogin }) {
         ) : (
           // Step 2: OTP Verification
           <>
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-dewa-green/10 rounded-full mb-4">
-                <svg className="w-8 h-8 text-dewa-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="mb-8 text-center"
+            >
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+                className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-dewa-green/10 to-emerald-500/10 rounded-2xl mb-5 border-2 border-dewa-green/20"
+              >
+                <Mail className="w-10 h-10 text-dewa-green" />
+              </motion.div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
                 {language === 'en' ? 'Verify Your Identity' : 'تحقق من هويتك'}
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 leading-relaxed">
                 {language === 'en' 
-                  ? `We've sent a 6-digit code to ${email}` 
-                  : `لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى ${email}`}
+                  ? `We've sent a 6-digit code to` 
+                  : `لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى`}
               </p>
+              <p className="text-sm font-semibold text-dewa-dark mt-1">{email}</p>
               {countdown > 0 && (
-                <p className="text-sm text-dewa-green font-medium mt-2">
-                  {language === 'en' ? 'Code expires in' : 'ينتهي الرمز خلال'}: {formatTime(countdown)}
-                </p>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-dewa-green/10 rounded-full"
+                >
+                  <div className="w-2 h-2 bg-dewa-green rounded-full animate-pulse" />
+                  <span className="text-sm text-dewa-green font-semibold">
+                    {language === 'en' ? 'Code expires in' : 'ينتهي الرمز خلال'}: {formatTime(countdown)}
+                  </span>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
 
-            <form onSubmit={handleVerifyOTP} className="space-y-4">
+            <form onSubmit={handleVerifyOTP} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-3 text-center">
                   {language === 'en' ? 'Enter 6-digit code' : 'أدخل الرمز المكون من 6 أرقام'}
                 </label>
                 <input
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dewa-green focus:border-transparent text-center text-2xl tracking-widest font-mono"
+                  className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-dewa-green focus:border-transparent text-center text-3xl tracking-[0.5em] font-mono font-bold text-gray-900 outline-none transition-all"
                   placeholder="000000"
                   maxLength={6}
                   required
@@ -419,46 +595,59 @@ export default function Login({ onLogin }) {
                 />
               </div>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="w-full bg-dewa-green hover:bg-green-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-dewa-green to-emerald-600 hover:from-dewa-green hover:to-emerald-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-dewa-green/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
+                <Shield className="w-5 h-5" />
                 {loading ? t('loading') : (language === 'en' ? 'Verify & Sign In' : 'تحقق وسجل الدخول')}
-              </button>
+              </motion.button>
             </form>
 
             {/* Resend & Back buttons */}
-            <div className="mt-6 space-y-2">
-              <button
+            <div className="mt-6 space-y-3">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleResendOTP}
                 disabled={resendCooldown > 0}
-                className="w-full text-sm text-dewa-green hover:text-green-600 font-medium disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="w-full text-sm text-dewa-green hover:text-emerald-600 font-semibold disabled:text-gray-400 disabled:cursor-not-allowed py-2 px-4 rounded-lg border-2 border-dewa-green/20 hover:border-dewa-green/40 disabled:border-gray-200 transition-all"
               >
                 {resendCooldown > 0 
                   ? `${language === 'en' ? 'Resend in' : 'إعادة الإرسال خلال'} ${resendCooldown}s`
-                  : (language === 'en' ? 'Resend Code' : 'إعادة إرسال الرمز')}
-              </button>
+                  : (language === 'en' ? '🔄 Resend Code' : '🔄 إعادة إرسال الرمز')}
+              </motion.button>
               
               <button
                 onClick={handleBackToLogin}
-                className="w-full text-sm text-gray-600 hover:text-gray-800"
+                className="w-full text-sm text-gray-600 hover:text-gray-800 font-medium py-2 transition-colors"
               >
                 {language === 'en' ? '← Back to Login' : '→ العودة إلى تسجيل الدخول'}
               </button>
             </div>
 
             {/* Console reminder */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-xs text-blue-800 text-center">
-                {language === 'en' 
-                  ? '💡 Demo Mode: Check your browser console for the OTP code' 
-                  : '💡 وضع التجريبي: تحقق من وحدة التحكم في متصفحك للحصول على رمز OTP'}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl"
+            >
+              <p className="text-xs text-blue-800 text-center flex items-center justify-center gap-2">
+                <span className="text-lg">💡</span>
+                <span>
+                  {language === 'en' 
+                    ? 'Demo Mode: Check your browser console for the OTP code' 
+                    : 'وضع التجريبي: تحقق من وحدة التحكم في متصفحك للحصول على رمز OTP'}
+                </span>
               </p>
-            </div>
+            </motion.div>
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   )
 }

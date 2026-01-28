@@ -55,170 +55,170 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Navigation */}
-      <div className="flex space-x-4 mb-6">
-        <Link
-          to="/summary"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          Summary
-        </Link>
-        <Link
-          to="/request"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          New Request
-        </Link>
-        <Link
-          to="/chat"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          Chat Support
-        </Link>
-        <Link
-          to="/dashboard"
-          className="px-4 py-2 bg-dewa-green text-white rounded-lg font-medium"
-        >
-          Analytics
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container mx-auto px-6 py-8 max-w-7xl">
+        {/* Navigation */}
+        <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
+          <Link
+            to="/summary"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            Summary
+          </Link>
+          <Link
+            to="/request"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            New Request
+          </Link>
+          <Link
+            to="/chat"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            Chat Support
+          </Link>
+          <Link
+            to="/dashboard"
+            className="px-5 py-2.5 bg-gradient-to-r from-dewa-green to-green-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap"
+          >
+            Analytics
+          </Link>
+        </div>
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-dewa-dark mb-2">Analytics & Continuous Learning</h1>
-        <p className="text-gray-600">Real-time insights from AI-powered customer interactions</p>
-      </div>
+        <div className="mb-10">
+          <h1 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight">Analytics & Insights</h1>
+          <p className="text-lg text-gray-600">Real-time insights from AI-powered customer interactions</p>
+        </div>
 
-      {/* DEWA Savings Section - Prominent Display */}
-      {analytics?.savings && (
-        <div className="bg-gradient-to-br from-green-600 to-emerald-700 text-white rounded-2xl shadow-2xl p-8 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
-                <span>💰</span> DEWA Cost Savings - AI Impact
-              </h2>
-              <p className="text-green-100">Financial benefits of AI-powered customer support</p>
-            </div>
-            <div className="bg-white bg-opacity-20 rounded-xl p-4 backdrop-blur-sm">
-              <p className="text-xs text-green-100 mb-1">Savings Rate</p>
-              <p className="text-3xl font-bold">{analytics.savings.savingsPercentage}%</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white bg-opacity-15 rounded-xl p-4 backdrop-blur-sm border border-white border-opacity-20">
-              <p className="text-xs text-green-100 mb-2">Current Period Savings</p>
-              <p className="text-3xl font-bold">AED {analytics.savings.totalSavings.toLocaleString()}</p>
-              <p className="text-xs text-green-200 mt-2">vs. traditional support model</p>
-            </div>
-
-            <div className="bg-white bg-opacity-15 rounded-xl p-4 backdrop-blur-sm border border-white border-opacity-20">
-              <p className="text-xs text-green-100 mb-2">Projected Monthly</p>
-              <p className="text-3xl font-bold">AED {analytics.savings.projectedMonthlySavings.toLocaleString()}</p>
-              <p className="text-xs text-green-200 mt-2">estimated savings/month</p>
-            </div>
-
-            <div className="bg-white bg-opacity-15 rounded-xl p-4 backdrop-blur-sm border border-white border-opacity-20">
-              <p className="text-xs text-green-100 mb-2">Projected Yearly</p>
-              <p className="text-3xl font-bold">AED {analytics.savings.projectedYearlySavings.toLocaleString()}</p>
-              <p className="text-xs text-green-200 mt-2">estimated savings/year</p>
-            </div>
-
-            <div className="bg-white bg-opacity-15 rounded-xl p-4 backdrop-blur-sm border border-white border-opacity-20">
-              <p className="text-xs text-green-100 mb-2">Agent Capacity Freed</p>
-              <p className="text-3xl font-bold">{analytics.savings.equivalentAgentsSaved}</p>
-              <p className="text-xs text-green-200 mt-2">equivalent agents saved</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white bg-opacity-10 rounded-lg p-3 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-green-100">AI-Handled Calls</span>
-                <span className="text-2xl">🤖</span>
+        {/* DEWA Savings Section - Prominent Display */}
+        {analytics?.savings && (
+          <div className="bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 text-white rounded-3xl shadow-xl p-10 mb-10">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-bold mb-3 flex items-center gap-3">
+                  <span>💰</span> Cost Savings Impact
+                </h2>
+                <p className="text-green-50 text-lg">Financial benefits of AI-powered support</p>
               </div>
-              <p className="text-2xl font-bold">{analytics.savings.deflectedCalls}</p>
-              <p className="text-xs text-green-200 mt-1">
-                @ AED {analytics.savings.costPerAICall} per call
+              <div className="bg-white/25 backdrop-blur-md rounded-2xl p-6 border border-white/30">
+                <p className="text-sm text-green-50 mb-2">Savings Rate</p>
+                <p className="text-4xl font-bold">{analytics.savings.savingsPercentage}%</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
+                <p className="text-sm text-green-50 mb-3 font-medium">Current Period</p>
+                <p className="text-3xl font-bold mb-2">AED {analytics.savings.totalSavings.toLocaleString()}</p>
+                <p className="text-xs text-green-100">vs. traditional model</p>
+              </div>
+
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
+                <p className="text-sm text-green-50 mb-3 font-medium">Monthly Projection</p>
+                <p className="text-3xl font-bold mb-2">AED {analytics.savings.projectedMonthlySavings.toLocaleString()}</p>
+                <p className="text-xs text-green-100">estimated/month</p>
+              </div>
+
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
+                <p className="text-sm text-green-50 mb-3 font-medium">Yearly Projection</p>
+                <p className="text-3xl font-bold mb-2">AED {analytics.savings.projectedYearlySavings.toLocaleString()}</p>
+                <p className="text-xs text-green-100">estimated/year</p>
+              </div>
+
+              <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 border border-white/30 hover:bg-white/25 transition-all">
+                <p className="text-sm text-green-50 mb-3 font-medium">Capacity Freed</p>
+                <p className="text-3xl font-bold mb-2">{analytics.savings.equivalentAgentsSaved}</p>
+                <p className="text-xs text-green-100">agent equivalents</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-base font-medium text-green-50">AI-Handled</span>
+                  <span className="text-2xl">🤖</span>
+                </div>
+                <p className="text-3xl font-bold mb-1">{analytics.savings.deflectedCalls}</p>
+                <p className="text-sm text-green-100">
+                  @ AED {analytics.savings.costPerAICall} per call
+                </p>
+              </div>
+
+              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-base font-medium text-green-50">Escalated</span>
+                  <span className="text-2xl">👤</span>
+                </div>
+                <p className="text-3xl font-bold mb-1">{analytics.savings.escalatedCalls}</p>
+                <p className="text-sm text-green-100">
+                  @ AED {analytics.savings.costPerHumanCall} per call
+                </p>
+              </div>
+
+              <div className="bg-white/15 backdrop-blur-md rounded-xl p-5 border border-white/20">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-base font-medium text-green-50">Comparison</span>
+                  <span className="text-2xl">📉</span>
+                </div>
+                <p className="text-sm mb-2">
+                  <span className="line-through text-red-200">AED {analytics.savings.traditionalCost.toLocaleString()}</span>
+                </p>
+                <p className="text-2xl font-bold text-green-50">AED {analytics.savings.actualCost.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-white/30">
+              <p className="text-sm text-green-50 text-center leading-relaxed">
+                💡 AI reduces support costs by handling routine inquiries efficiently, allowing agents to focus on complex cases
               </p>
             </div>
+          </div>
+        )}
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-3 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-green-100">Escalated to Agents</span>
-                <span className="text-2xl">👤</span>
-              </div>
-              <p className="text-2xl font-bold">{analytics.savings.escalatedCalls}</p>
-              <p className="text-xs text-green-200 mt-1">
-                @ AED {analytics.savings.costPerHumanCall} per call
-              </p>
+        {/* Key Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-dewa-green">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Interactions</h3>
+              <span className="text-3xl">📊</span>
             </div>
+            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.totalInteractions || 0}</p>
+            <p className="text-sm text-gray-500">All channels</p>
+          </div>
 
-            <div className="bg-white bg-opacity-10 rounded-lg p-3 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-green-100">Cost Comparison</span>
-                <span className="text-2xl">📉</span>
-              </div>
-              <p className="text-sm">
-                <span className="line-through text-red-300">AED {analytics.savings.traditionalCost.toLocaleString()}</span>
-                <br />
-                <span className="text-xl font-bold text-green-200">AED {analytics.savings.actualCost.toLocaleString()}</span>
-              </p>
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-blue-500">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">FCR Rate</h3>
+              <span className="text-3xl">✅</span>
             </div>
+            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.fcrRate || 0}%</p>
+            <p className="text-sm text-gray-500">First Contact Resolution</p>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-white border-opacity-20">
-            <p className="text-xs text-green-100 text-center">
-              💡 AI reduces customer support costs by handling routine inquiries efficiently, allowing agents to focus on complex cases
-            </p>
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-orange-500">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Deflection</h3>
+              <span className="text-3xl">🎯</span>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.deflectionRate || 0}%</p>
+            <p className="text-sm text-gray-500">Prevented tickets</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Satisfaction</h3>
+              <span className="text-3xl">⭐</span>
+            </div>
+            <p className="text-4xl font-bold text-gray-900 mb-1">{analytics?.avgSatisfaction || 0}/5</p>
+            <p className="text-sm text-gray-500">Customer rating</p>
           </div>
         </div>
-      )}
 
-      {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-dewa-green">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Total Interactions</h3>
-            <span className="text-2xl">📊</span>
-          </div>
-          <p className="text-3xl font-bold text-dewa-dark">{analytics?.totalInteractions || 0}</p>
-          <p className="text-xs text-gray-500 mt-1">All channels</p>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">FCR Rate</h3>
-            <span className="text-2xl">✅</span>
-          </div>
-          <p className="text-3xl font-bold text-dewa-dark">{analytics?.fcrRate || 0}%</p>
-          <p className="text-xs text-gray-500 mt-1">First Contact Resolution</p>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Ticket Deflection</h3>
-            <span className="text-2xl">🎯</span>
-          </div>
-          <p className="text-3xl font-bold text-dewa-dark">{analytics?.deflectionRate || 0}%</p>
-          <p className="text-xs text-gray-500 mt-1">Prevented tickets</p>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Avg Satisfaction</h3>
-            <span className="text-2xl">⭐</span>
-          </div>
-          <p className="text-3xl font-bold text-dewa-dark">{analytics?.avgSatisfaction || 0}/5</p>
-          <p className="text-xs text-gray-500 mt-1">Customer rating</p>
-        </div>
-      </div>
-
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Performance Metrics */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Performance vs Targets</h3>
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+          {/* Performance Metrics */}
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-7">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Performance vs Targets</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={performanceData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -232,9 +232,9 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* Interaction Distribution */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Interaction Distribution</h3>
+          {/* Interaction Distribution */}
+          <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-7">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Interaction Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -258,47 +258,48 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* AI Insights */}
-      <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl shadow-lg p-6 border border-blue-200">
-        <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
-          <span className="mr-2">🤖</span>
-          Continuous Learning Insights
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <h4 className="font-semibold text-gray-700 mb-2">AI Accuracy</h4>
-            <p className="text-2xl font-bold text-dewa-green mb-1">
-              {analytics?.fcrRate || 0}%
-            </p>
-            <p className="text-xs text-gray-600">
-              Intent classification accuracy improving with each interaction
-            </p>
+        {/* AI Insights */}
+        <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-3xl shadow-md p-8 border border-blue-100">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <span className="mr-3">🤖</span>
+            Continuous Learning Insights
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-semibold text-gray-800 mb-3 text-lg">AI Accuracy</h4>
+              <p className="text-3xl font-bold text-dewa-green mb-2">
+                {analytics?.fcrRate || 0}%
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Intent classification accuracy improving with each interaction
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-semibold text-gray-800 mb-3 text-lg">Proactive Impact</h4>
+              <p className="text-3xl font-bold text-dewa-blue mb-2">
+                {analytics?.deflectedCount || 0}
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Tickets prevented through proactive guidance
+              </p>
+            </div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h4 className="font-semibold text-gray-800 mb-3 text-lg">Human Oversight</h4>
+              <p className="text-3xl font-bold text-orange-500 mb-2">100%</p>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                AI recommendations require human approval
+              </p>
+            </div>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <h4 className="font-semibold text-gray-700 mb-2">Proactive Impact</h4>
-            <p className="text-2xl font-bold text-dewa-blue mb-1">
-              {analytics?.deflectedCount || 0}
-            </p>
-            <p className="text-xs text-gray-600">
-              Tickets prevented through proactive guidance
-            </p>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
-            <h4 className="font-semibold text-gray-700 mb-2">Human Oversight</h4>
-            <p className="text-2xl font-bold text-orange-500 mb-1">100%</p>
-            <p className="text-xs text-gray-600">
-              AI recommendations require human approval
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-6 pt-4 border-t border-blue-200">
-          <h4 className="font-semibold text-gray-800 mb-3">Feedback Loop Active ♻️</h4>
-          <div className="space-y-2 text-sm text-gray-700">
-            <p>✓ Real-time logging of all AI interactions</p>
-            <p>✓ Customer satisfaction data feeding back to models</p>
-            <p>✓ Automated A/B testing for empathy responses</p>
-            <p>✓ Human override tracking for model improvement</p>
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-4 text-lg">Feedback Loop Active ♻️</h4>
+            <div className="space-y-3 text-sm text-gray-700">
+              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Real-time logging of all AI interactions</p>
+              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Customer satisfaction data feeding back to models</p>
+              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Automated A/B testing for empathy responses</p>
+              <p className="flex items-start gap-2"><span className="text-green-500">✓</span> Human override tracking for model improvement</p>
+            </div>
           </div>
         </div>
       </div>

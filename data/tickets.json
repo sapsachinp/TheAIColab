@@ -368,5 +368,79 @@
         "note": "Ticket created via web portal"
       }
     ]
+  },
+  {
+    "ticketId": "DEWA-1769626540578-8770",
+    "customerId": "C12345",
+    "requestType": "payment",
+    "requestDetails": "new complaint about payment",
+    "aiGuidance": {
+      "intent": {
+        "category": "complaint",
+        "confidence": 0.85,
+        "reasoning": "The customer is expressing dissatisfaction about a payment issue, which falls under the complaint category."
+      },
+      "proactiveAdvice": {
+        "suggestion": "Your request will be processed. We'll assign it to the appropriate team.",
+        "confidence": 0.5,
+        "shouldDeflect": false,
+        "reason": "needs_human_review"
+      },
+      "customerDataAnalysis": {
+        "billingSummary": {
+          "currentBill": 780.3,
+          "predictedBill": 845.5,
+          "variance": "8.4",
+          "trend": "increasing"
+        },
+        "consumptionInsights": {
+          "trend": "increasing",
+          "variance": 23.6,
+          "average": "684.06",
+          "latest": "845.50",
+          "comparedToSimilar": "+18% higher than similar homes"
+        },
+        "accountStatus": {
+          "openComplaints": 2,
+          "hasUnpaidBills": false,
+          "unpaidAmount": 0
+        },
+        "usagePatterns": {
+          "reason": "AC usage during winter months",
+          "peakHours": "14:00-18:00"
+        }
+      },
+      "situationAnalysis": "Ahmed Al Mansoori has an increasing consumption trend with a predicted next bill higher than the last bill. He has two open complaints and has now raised a new complaint about payment, indicating potential financial concerns.",
+      "rootCause": "The root cause of Ahmed's new complaint about payment could be due to financial constraints, unexpected expenses, or difficulty in managing increasing utility costs.",
+      "recommendations": [
+        "Review and optimize energy consumption habits to reduce the bill amount.",
+        "Consider enrolling in DEWA's installment payment plan to manage bills more effectively.",
+        "Reach out to DEWA's customer service for personalized assistance and possible payment extensions or options."
+      ],
+      "priority": "high",
+      "customerImpact": "Ahmed's financial situation may be impacted if the payment issue is not addressed promptly. Taking proactive steps to manage his utility costs can alleviate potential financial stress and help him avoid further payment difficulties.",
+      "shouldProceed": true,
+      "aiPowered": true,
+      "timestamp": "2026-01-28T18:55:22.524Z"
+    },
+    "status": "Open",
+    "priority": "High",
+    "createdAt": "2026-01-28T18:55:40.579Z",
+    "updatedAt": "2026-01-28T18:55:40.579Z",
+    "aiRecommendations": [
+      "Review and optimize energy consumption habits to reduce the bill amount.",
+      "Consider enrolling in DEWA's installment payment plan to manage bills more effectively.",
+      "Reach out to DEWA's customer service for personalized assistance and possible payment extensions or options."
+    ],
+    "channel": "web",
+    "assignedTo": null,
+    "notes": [],
+    "statusHistory": [
+      {
+        "status": "Open",
+        "timestamp": "2026-01-28T18:55:40.579Z",
+        "note": "Ticket created via web portal"
+      }
+    ]
   }
 ]

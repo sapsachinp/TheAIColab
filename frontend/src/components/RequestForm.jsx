@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { motion, AnimatePresence } from 'framer-motion'
+import { AlertCircle, CheckCircle, X } from 'lucide-react'
 
 export default function RequestForm({ customer }) {
   const [requestType, setRequestType] = useState('')
@@ -11,6 +13,10 @@ export default function RequestForm({ customer }) {
   const [loadingExplanation, setLoadingExplanation] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submittedTicket, setSubmittedTicket] = useState(null)
+  const [existingRequests, setExistingRequests] = useState([])
+  const [showDuplicateWarning, setShowDuplicateWarning] = useState(false)
+  const [checkingDuplicates, setCheckingDuplicates] = useState(false)
+  const [confirmedProceed, setConfirmedProceed] = useState(false)
 
   const requestTypes = [
     { value: 'billing_inquiry', label: 'Billing Inquiry / High Bill', icon: '💰' },
@@ -21,14 +27,76 @@ export default function RequestForm({ customer }) {
     { value: 'complaint', label: 'General Complaint', icon: '📝' }
   ]
 
-  // Generate AI explanation when request type changes
+  // Check for existing requests and generate AI explanation when request type changes
   useEffect(() => {
     if (requestType) {
+      checkExistingRequests(requestType)
       generateRequestExplanation(requestType)
     } else {
       setRequestExplanation(null)
+      setExistingRequests([])
+      setShowDuplicateWarning(false)
+      setConfirmedProceed(false)
     }
   }, [requestType])
+
+  const checkExistingRequests = async (type) => {
+    setCheckingDuplicates(true)
+    try {
+      const token = localStorage.getItem('token')
+      // Fetch customer's open tickets
+      const response = await axios.get(
+        `http://localhost:3001/api/customer/summary/${customer.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      )
+
+      const customerData = response.data.customer
+      const openComplaints = customerData.openComplaints || []
+      
+      // Filter complaints matching the selected request type
+      const matchingRequests = openComplaints.filter(complaint => {
+        // Map complaint subjects to request types
+        const subjectLower = (complaint.subject || '').toLowerCase()
+        const typeLower = type.toLowerCase()
+        
+        if (typeLower.includes('billing') && subjectLower.includes('bill')) return true
+        if (typeLower.includes('outage') && subjectLower.includes('outage')) return true
+        if (typeLower.includes('meter') && subjectLower.includes('meter')) return true
+        if (typeLower.includes('payment') && subjectLower.includes('payment')) return true
+        if (typeLower.includes('connection') && subjectLower.includes('connection')) return true
+        
+        return false
+      })
+
+      if (matchingRequests.length > 0) {
+        setExistingRequests(matchingRequests)
+        setShowDuplicateWarning(true)
+        setConfirmedProceed(false)
+      } else {
+        setExistingRequests([])
+        setShowDuplicateWarning(false)
+        setConfirmedProceed(true) // Auto-proceed if no duplicates
+      }
+    } catch (err) {
+      console.error('Error checking existing requests:', err)
+      setConfirmedProceed(true) // Allow proceeding on error
+    } finally {
+      setCheckingDuplicates(false)
+    }
+  }
+
+  const handleConfirmProceed = () => {
+    setConfirmedProceed(true)
+    setShowDuplicateWarning(false)
+  }
+
+  const handleCancelProceed = () => {
+    setRequestType('')
+    setShowDuplicateWarning(false)
+    setConfirmedProceed(false)
+  }
 
   const generateRequestExplanation = async (type) => {
     setLoadingExplanation(true)
@@ -186,30 +254,31 @@ export default function RequestForm({ customer }) {
 
   if (submitted && submittedTicket) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-2xl p-8 shadow-xl">
-          <div className="text-center mb-6">
-            <div className="text-7xl mb-4 animate-bounce">✅</div>
-            <h2 className="text-3xl font-bold text-green-900 mb-2">
-              Request Submitted Successfully!
-            </h2>
-            <p className="text-green-700 text-lg">
-              Your request has been registered and our team will review it shortly.
-            </p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="container mx-auto px-6 py-12 max-w-4xl">
+          <div className="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 border-2 border-green-300 rounded-3xl p-10 shadow-xl">
+            <div className="text-center mb-8">
+              <div className="text-8xl mb-6 animate-bounce">✅</div>
+              <h2 className="text-4xl font-bold text-green-900 mb-3">
+                Request Submitted Successfully!
+              </h2>
+              <p className="text-green-700 text-lg">
+                Your request has been registered and our team will review it shortly.
+              </p>
+            </div>
 
-          {/* Ticket Details Card */}
-          <div className="bg-white rounded-xl p-6 shadow-md mb-6">
-            <h3 className="font-bold text-xl text-dewa-dark mb-4 flex items-center">
-              <span className="text-2xl mr-2">🎫</span>
-              Ticket Details
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <p className="text-sm text-gray-600 mb-1">Ticket Number</p>
-                <p className="font-bold text-lg text-dewa-blue">{submittedTicket.ticketId}</p>
-              </div>
+            {/* Ticket Details Card */}
+            <div className="bg-white rounded-2xl p-8 shadow-md mb-8">
+              <h3 className="font-bold text-2xl text-gray-900 mb-6 flex items-center">
+                <span className="text-3xl mr-3">🎫</span>
+                Ticket Details
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200">
+                  <p className="text-sm text-gray-600 mb-2 font-medium">Ticket Number</p>
+                  <p className="font-bold text-2xl text-dewa-blue">{submittedTicket.ticketId}</p>
+                </div>
               
               <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
                 <p className="text-sm text-gray-600 mb-1">Priority</p>
@@ -239,67 +308,68 @@ export default function RequestForm({ customer }) {
               </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-200">
-              <p className="text-sm text-gray-600 mb-1">Submitted</p>
-              <p className="text-gray-800">
-                {new Date(submittedTicket.createdAt).toLocaleString()}
-              </p>
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 mb-2 font-medium">Submitted</p>
+                <p className="text-gray-900 font-semibold text-lg">
+                  {new Date(submittedTicket.createdAt).toLocaleString()}
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Next Steps */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-200">
-            <h4 className="font-bold text-lg text-dewa-dark mb-3 flex items-center">
-              <span className="text-2xl mr-2">📋</span>
-              What Happens Next?
-            </h4>
-            <ul className="space-y-2 text-gray-700">
-              <li className="flex items-start">
-                <span className="text-green-500 mr-2 mt-1">✓</span>
-                <span>Your request has been logged in our system</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-500 mr-2 mt-1">→</span>
-                <span>Our support team will review your request within 24 hours</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-purple-500 mr-2 mt-1">📧</span>
-                <span>You'll receive updates via email and SMS</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-orange-500 mr-2 mt-1">💬</span>
-                <span>Track your request anytime via Chat Support by asking "track my requests"</span>
-              </li>
-            </ul>
-          </div>
+            {/* Next Steps */}
+            <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-7 mb-8 border border-blue-200">
+              <h4 className="font-bold text-xl text-gray-900 mb-5 flex items-center">
+                <span className="text-3xl mr-3">📋</span>
+                What Happens Next?
+              </h4>
+              <ul className="space-y-4 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-500 text-xl mt-0.5">✓</span>
+                  <span className="text-base">Your request has been logged in our system</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-500 text-xl mt-0.5">→</span>
+                  <span className="text-base">Our support team will review your request within 24 hours</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-500 text-xl mt-0.5">📧</span>
+                  <span className="text-base">You'll receive updates via email and SMS</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-orange-500 text-xl mt-0.5">💬</span>
+                  <span className="text-base">Track your request anytime via Chat Support by asking "track my requests"</span>
+                </li>
+              </ul>
+            </div>
 
-          {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/chat"
-              className="flex-1 bg-dewa-blue hover:bg-blue-700 text-white px-6 py-4 rounded-lg font-bold transition text-center shadow-md"
-            >
-              💬 Chat Support
-            </Link>
-            <Link
-              to="/summary"
-              className="flex-1 bg-dewa-green hover:bg-green-600 text-white px-6 py-4 rounded-lg font-bold transition text-center shadow-md"
-            >
-              📊 Back to Dashboard
-            </Link>
-            <button
-              onClick={() => {
-                setSubmitted(false)
-                setSubmittedTicket(null)
-                setGuidance(null)
-                setRequestType('')
-                setRequestDetails('')
-                setRequestExplanation(null)
-              }}
-              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-4 rounded-lg font-bold transition shadow-md"
-            >
-              ➕ Submit Another
-            </button>
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/chat"
+                className="flex-1 bg-gradient-to-r from-dewa-blue to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-4 rounded-xl font-bold transition-all text-center shadow-md hover:shadow-lg"
+              >
+                💬 Chat Support
+              </Link>
+              <Link
+                to="/summary"
+                className="flex-1 bg-gradient-to-r from-dewa-green to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-4 rounded-xl font-bold transition-all text-center shadow-md hover:shadow-lg"
+              >
+                📊 Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  setSubmitted(false)
+                  setSubmittedTicket(null)
+                  setGuidance(null)
+                  setRequestType('')
+                  setRequestDetails('')
+                  setRequestExplanation(null)
+                }}
+                className="flex-1 bg-white hover:bg-gray-50 text-gray-800 px-6 py-4 rounded-xl font-bold transition-all shadow-md hover:shadow-lg border-2 border-gray-200"
+              >
+                ➕ New Request
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -307,76 +377,77 @@ export default function RequestForm({ customer }) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Navigation */}
-      <div className="flex space-x-4 mb-6">
-        <Link
-          to="/summary"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          Summary
-        </Link>
-        <Link
-          to="/request"
-          className="px-4 py-2 bg-dewa-green text-white rounded-lg font-medium"
-        >
-          New Request
-        </Link>
-        <Link
-          to="/chat"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          Chat Support
-        </Link>
-        <Link
-          to="/dashboard"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
-        >
-          Analytics
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container mx-auto px-6 py-8 max-w-7xl">
+        {/* Navigation */}
+        <div className="flex gap-3 mb-8 overflow-x-auto pb-2">
+          <Link
+            to="/summary"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            Summary
+          </Link>
+          <Link
+            to="/request"
+            className="px-5 py-2.5 bg-gradient-to-r from-dewa-green to-green-600 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap"
+          >
+            New Request
+          </Link>
+          <Link
+            to="/chat"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            Chat Support
+          </Link>
+          <Link
+            to="/dashboard"
+            className="px-5 py-2.5 bg-white hover:bg-gray-50 rounded-xl font-medium text-gray-700 shadow-sm hover:shadow-md transition-all duration-200 whitespace-nowrap border border-gray-200"
+          >
+            Analytics
+          </Link>
+        </div>
 
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-dewa-dark mb-6">
-            Submit New Request
-          </h2>
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-3xl shadow-lg p-10">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              Submit New Request
+            </h2>
 
-          {/* Proactive Alert */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-start">
-              <span className="text-2xl mr-3">💡</span>
-              <div>
-                <p className="font-medium text-blue-900 mb-1">
-                  AI-Powered Proactive Guidance
-                </p>
-                <p className="text-sm text-blue-700">
-                  Get instant AI analysis before submitting. We'll check for duplicates,
-                  known issues, and provide personalized recommendations.
-                </p>
+            {/* Proactive Alert */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 mb-8">
+              <div className="flex items-start gap-3">
+                <span className="text-3xl">💡</span>
+                <div className="flex-1">
+                  <p className="font-semibold text-blue-900 mb-2 text-lg">
+                    AI-Powered Guidance
+                  </p>
+                  <p className="text-sm text-blue-800 leading-relaxed">
+                    Get instant AI analysis before submitting. We'll check for duplicates,
+                    known issues, and provide personalized recommendations.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="space-y-6">
-            {/* Request Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Request Type *
-              </label>
-              <select
-                value={requestType}
-                onChange={(e) => setRequestType(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dewa-green focus:border-transparent"
-              >
-                <option value="">Select request type...</option>
-                {requestTypes.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.icon} {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="space-y-7">
+              {/* Request Type */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                  Request Type *
+                </label>
+                <select
+                  value={requestType}
+                  onChange={(e) => setRequestType(e.target.value)}
+                  className="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-dewa-green focus:border-dewa-green transition-all bg-white text-gray-900"
+                >
+                  <option value="">Select request type...</option>
+                  {requestTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.icon} {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
             {/* AI Request Explanation - Shows when request type is selected */}
             {requestType && requestExplanation && (
@@ -430,6 +501,134 @@ export default function RequestForm({ customer }) {
                                   {requestExplanation.nextSteps}
                                 </p>
                               </div>
+
+            {/* Duplicate Warning Modal */}
+            <AnimatePresence>
+              {showDuplicateWarning && existingRequests.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+                  onClick={handleCancelProceed}
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, y: 20 }}
+                    animate={{ scale: 1, y: 0 }}
+                    exit={{ scale: 0.9, y: 20 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+                  >
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3">
+                          <AlertCircle className="w-8 h-8 flex-shrink-0 mt-1" />
+                          <div>
+                            <h3 className="text-2xl font-bold mb-2">
+                              Similar Open Request Found
+                            </h3>
+                            <p className="text-sm text-white/90">
+                              You already have an open request for this category. Review it before creating a duplicate.
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={handleCancelProceed}
+                          className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Existing Requests */}
+                    <div className="p-6 max-h-[50vh] overflow-y-auto">
+                      <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <span className="text-xl">🎫</span>
+                        Your Open Requests for This Category:
+                      </h4>
+                      
+                      <div className="space-y-3">
+                        {existingRequests.map((request, index) => (
+                          <motion.div
+                            key={request.ticketId}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 border-2 border-orange-200"
+                          >
+                            <div className="flex items-start justify-between mb-3">
+                              <div>
+                                <p className="font-semibold text-gray-900 mb-1">
+                                  {request.subject}
+                                </p>
+                                <p className="text-sm text-gray-600 font-mono">
+                                  Ticket: {request.ticketId}
+                                </p>
+                              </div>
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                request.status === 'Open' ? 'bg-red-100 text-red-700' :
+                                request.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-blue-100 text-blue-700'
+                              }`}>
+                                {request.status}
+                              </span>
+                            </div>
+                            
+                            {request.subjectAr && (
+                              <p className="text-sm text-gray-600 mb-2" dir="rtl">
+                                {request.subjectAr}
+                              </p>
+                            )}
+                            
+                            <div className="flex items-center gap-4 text-xs text-gray-500 pt-2 border-t border-orange-200">
+                              <span className="flex items-center gap-1">
+                                <span className={`w-2 h-2 rounded-full ${
+                                  request.priority === 'High' ? 'bg-red-500' :
+                                  request.priority === 'Medium' ? 'bg-orange-500' :
+                                  'bg-green-500'
+                                }`} />
+                                {request.priority} Priority
+                              </span>
+                              {request.accountNumber && (
+                                <span>Account: {request.accountNumber}</span>
+                              )}
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="bg-gray-50 p-6 border-t border-gray-200">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={handleCancelProceed}
+                          className="flex-1 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                        >
+                          Cancel & Review Existing
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={handleConfirmProceed}
+                          className="flex-1 px-6 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                        >
+                          <CheckCircle className="w-5 h-5" />
+                          Proceed with New Request
+                        </motion.button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-3 text-center">
+                        💡 Tip: Check your existing requests in Chat Support or Dashboard before creating duplicates
+                      </p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
                             </div>
                           </div>
                         )}
@@ -459,27 +658,49 @@ export default function RequestForm({ customer }) {
 
             {/* Request Details */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Details {requestType && '(Optional - but helps us serve you better)'}
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Details {requestType && '(Optional - helps us serve you better)'}
               </label>
               <textarea
                 value={requestDetails}
                 onChange={(e) => setRequestDetails(e.target.value)}
-                rows="4"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dewa-green focus:border-transparent"
+                rows="5"
+                className="w-full px-5 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-dewa-green focus:border-dewa-green transition-all resize-none"
                 placeholder="Please describe your request in detail..."
               />
             </div>
 
             {/* Get AI Guidance Button */}
             {!guidance && (
-              <button
-                onClick={handleGetGuidance}
-                disabled={loading || !requestType}
-                className="w-full bg-dewa-blue hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
-              >
-                {loading ? 'Analyzing...' : '🤖 Get AI Guidance'}
-              </button>
+              <div>
+                <button
+                  onClick={handleGetGuidance}
+                  disabled={loading || !requestType || !confirmedProceed || checkingDuplicates}
+                  className="w-full bg-gradient-to-r from-dewa-blue to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-xl transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:from-gray-300 disabled:to-gray-400"
+                >
+                  {checkingDuplicates ? (
+                    <>
+                      <span className="animate-spin inline-block mr-2">⚙️</span>
+                      Checking for duplicates...
+                    </>
+                  ) : loading ? (
+                    <>
+                      <span className="animate-spin inline-block mr-2">⚙️</span>
+                      Analyzing...
+                    </>
+                  ) : !confirmedProceed && existingRequests.length > 0 ? (
+                    '⚠️ Confirm to proceed'
+                  ) : (
+                    '🤖 Get AI Guidance'
+                  )}
+                </button>
+                {!confirmedProceed && existingRequests.length > 0 && (
+                  <p className="text-sm text-amber-600 mt-3 flex items-center gap-2 justify-center">
+                    <AlertCircle className="w-4 h-4" />
+                    Please review and confirm your existing requests first
+                  </p>
+                )}
+              </div>
             )}
           </div>
 
@@ -723,8 +944,9 @@ export default function RequestForm({ customer }) {
                   ← Modify Request
                 </button>
               </div>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

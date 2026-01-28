@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useLanguage } from '../contexts/LanguageContext'
 import axios from 'axios'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  Send, Mic, MicOff, Volume2, VolumeX, FileText, 
+  Activity, MessageSquare, BarChart3, User, Bot, X, CheckCircle
+} from 'lucide-react'
 
 export default function Chatbot({ customer }) {
   const { t } = useTranslation('chatbot')
@@ -372,34 +377,42 @@ export default function Chatbot({ customer }) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
       {/* Navigation */}
-      <div className="flex space-x-4 rtl:space-x-reverse mb-6">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-wrap gap-3 mb-8"
+      >
         <Link
           to="/summary"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <Activity className="w-5 h-5" />
           {tCommon('navigation.summary')}
         </Link>
         <Link
           to="/request"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <FileText className="w-5 h-5" />
           {tCommon('navigation.newRequest')}
         </Link>
         <Link
           to="/chat"
-          className="px-4 py-2 bg-dewa-green text-white rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl font-semibold shadow-lg shadow-dewa-green/20"
         >
+          <MessageSquare className="w-5 h-5" />
           {tCommon('navigation.chatSupport')}
         </Link>
         <Link
           to="/dashboard"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <BarChart3 className="w-5 h-5" />
           {tCommon('navigation.analytics')}
         </Link>
-      </div>
+      </motion.div>
 
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
         {/* Chat Header */}

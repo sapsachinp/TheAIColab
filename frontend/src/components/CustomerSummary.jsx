@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import axios from 'axios'
+import { motion } from 'framer-motion'
+import { 
+  User, FileText, Zap, Droplets, AlertCircle, TrendingUp, 
+  CreditCard, Phone, MapPin, Calendar, Award, BarChart3,
+  MessageSquare, FileCheck, DollarSign, Activity, Shield
+} from 'lucide-react'
 
 export default function CustomerSummary({ customer }) {
   const [summary, setSummary] = useState(null)
@@ -86,95 +92,158 @@ export default function CustomerSummary({ customer }) {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Navigation */}
-      <div className="flex space-x-4 mb-6">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-wrap gap-3 mb-8"
+      >
         <Link
           to="/summary"
-          className="px-4 py-2 bg-dewa-green text-white rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-dewa-green to-emerald-600 text-white rounded-xl font-semibold shadow-lg shadow-dewa-green/20"
         >
+          <Activity className="w-5 h-5" />
           Summary
         </Link>
         <Link
           to="/request"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <FileCheck className="w-5 h-5" />
           New Request
         </Link>
         <Link
           to="/chat"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <MessageSquare className="w-5 h-5" />
           Chat Support
         </Link>
         <Link
           to="/dashboard"
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium"
+          className="flex items-center gap-2 px-5 py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium border-2 border-gray-200 hover:border-gray-300 transition-all"
         >
+          <BarChart3 className="w-5 h-5" />
           Analytics
         </Link>
-      </div>
+      </motion.div>
 
       {/* Customer 360 Information */}
-      <div className="bg-gradient-to-br from-dewa-blue to-blue-600 text-white rounded-2xl shadow-xl p-6 mb-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome, {customerData.name}</h1>
-            <p className="text-blue-100 text-sm">Business Partner: {customerData.businessPartnerName || customerData.businessPartner || 'N/A'}</p>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-blue-100">Customer ID</p>
-            <p className="text-lg font-bold">{customerData.id}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          {/* Contract Accounts */}
-          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">📋</span>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1 }}
+        className="bg-gradient-to-br from-dewa-blue via-blue-600 to-blue-700 text-white rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden"
+      >
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24" />
+        
+        <div className="relative z-10">
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", delay: 0.2 }}
+                className="w-16 h-16 bg-gradient-to-br from-dewa-green to-emerald-500 rounded-2xl flex items-center justify-center text-2xl font-bold shadow-lg"
+              >
+                {customerData.name.charAt(0)}
+              </motion.div>
               <div>
-                <p className="text-xs text-blue-100">Contract Accounts</p>
-                <p className="text-2xl font-bold">{customerData.contractAccounts?.length || 1}</p>
+                <h1 className="text-4xl font-bold mb-2">Welcome, {customerData.name}</h1>
+                <div className="flex items-center gap-2 text-blue-100">
+                  <User className="w-4 h-4" />
+                  <p className="text-sm">Business Partner: {customerData.businessPartnerName || customerData.businessPartner || 'N/A'}</p>
+                </div>
               </div>
+            </div>
+            <div className="text-right bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+              <p className="text-xs text-blue-100 mb-1">Customer ID</p>
+              <p className="text-2xl font-bold">{customerData.id}</p>
             </div>
           </div>
 
-          {/* Total Services */}
-          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">⚡</span>
-              <div>
-                <p className="text-xs text-blue-100">Active Services</p>
-                <p className="text-2xl font-bold">
-                  {customerData.contractAccounts?.reduce((total, acc) => total + (acc.services?.length || 0), 0) || 2}
-                </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            {/* Contract Accounts */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all group"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-lg group-hover:scale-110 transition-transform">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs text-blue-100">Contract Accounts</p>
+                  <p className="text-3xl font-bold">{customerData.contractAccounts?.length || 1}</p>
+                </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Open Requests */}
-          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">🎫</span>
-              <div>
-                <p className="text-xs text-blue-100">Open Requests</p>
-                <p className="text-2xl font-bold">{customerData.openComplaints?.length || 0}</p>
+            {/* Total Services */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all group"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-lg group-hover:scale-110 transition-transform">
+                  <Zap className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs text-blue-100">Active Services</p>
+                  <p className="text-3xl font-bold">
+                    {customerData.contractAccounts?.reduce((total, acc) => total + (acc.services?.length || 0), 0) || 2}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* Outstanding Dues */}
-          <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">💰</span>
-              <div>
-                <p className="text-xs text-blue-100">Total Dues</p>
-                <p className={`text-2xl font-bold ${(customerData.totalOutstandingDues || 0) > 0 ? 'text-yellow-300' : ''}`}>
-                  AED {(customerData.totalOutstandingDues || 0).toFixed(2)}
-                </p>
+            {/* Open Requests */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all group"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 bg-gradient-to-br from-red-500/30 to-rose-500/30 rounded-lg group-hover:scale-110 transition-transform">
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs text-blue-100">Open Requests</p>
+                  <p className="text-3xl font-bold">{customerData.openComplaints?.length || 0}</p>
+                </div>
               </div>
-            </div>
+            </motion.div>
+
+            {/* Outstanding Dues */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 hover:bg-white/15 transition-all group"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`p-2 bg-gradient-to-br rounded-lg group-hover:scale-110 transition-transform ${
+                  (customerData.totalOutstandingDues || 0) > 0 
+                    ? 'from-amber-500/30 to-yellow-500/30' 
+                    : 'from-green-500/30 to-emerald-500/30'
+                }`}>
+                  <CreditCard className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs text-blue-100">Total Dues</p>
+                  <p className={`text-3xl font-bold ${(customerData.totalOutstandingDues || 0) > 0 ? 'text-yellow-300' : ''}`}>
+                    AED {(customerData.totalOutstandingDues || 0).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </div>
 
         {/* Contract Accounts Detail */}
         {customerData.contractAccounts && customerData.contractAccounts.length > 0 && (
@@ -251,7 +320,8 @@ export default function CustomerSummary({ customer }) {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </motion.div>
 
       {/* Account Health Score */}
       {customerData.accountHealth && (
