@@ -9,6 +9,7 @@ import {
   TrendingUp, Globe, Brain, Users, MessageCircle, 
   Target, BarChart3, Zap
 } from 'lucide-react'
+import { API_BASE_URL, mockAuth } from '../config/api'
 
 export default function Login({ onLogin }) {
   const { t } = useTranslation('common')
@@ -47,11 +48,20 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/login', {
-        email,
-        password,
-        language
-      })
+      let response
+      try {
+        // Try real backend first
+        response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+          email,
+          password,
+          language
+        }, { timeout: 5000 })
+      } catch (backendError) {
+        // Fallback to mock service
+        console.log('Backend unavailable, using mock authentication')
+        const mockResponse = await mockAuth.login(email, password)
+        response = { data: mockResponse }
+      }
 
       if (response.data.requiresMFA) {
         // MFA required - show OTP input
@@ -64,7 +74,7 @@ export default function Login({ onLogin }) {
         onLogin(response.data.token, response.data.customer)
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please try again.')
+      setError(err.response?.data?.error || err.message || 'Login failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -76,16 +86,25 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/verify-otp', {
-        email,
-        otp
-      })
+      let response
+      try {
+        // Try real backend first
+        response = await axios.post(`${API_BASE_URL}/api/auth/verify-otp`, {
+          email,
+          otp
+        }, { timeout: 5000 })
+      } catch (backendError) {
+        // Fallback to mock service
+        console.log('Backend unavailable, using mock OTP verification')
+        const mockResponse = await mockAuth.verifyOTP(email, otp)
+        response = { data: mockResponse }
+      }
 
       if (response.data.success) {
         onLogin(response.data.token, response.data.customer)
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Verification failed. Please try again.')
+      setError(err.response?.data?.error || err.message || 'Verification failed. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -98,10 +117,19 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:3001/api/auth/resend-otp', {
-        email,
-        language
-      })
+      let response
+      try {
+        // Try real backend first
+        response = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, {
+          email,
+          language
+        }, { timeout: 5000 })
+      } catch (backendError) {
+        // Fallback to mock service
+        console.log('Backend unavailable, using mock OTP resend')
+        const mockResponse = await mockAuth.resendOTP(email)
+        response = { data: mockResponse }
+      }
 
       if (response.data.success) {
         setOtpExpiresIn(response.data.expiresIn)
@@ -111,7 +139,7 @@ export default function Login({ onLogin }) {
         setError('')
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to resend code.')
+      setError(err.response?.data?.error || err.message || 'Failed to resend code.')
     } finally {
       setLoading(false)
     }

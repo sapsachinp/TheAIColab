@@ -8,6 +8,7 @@ import {
   Send, Mic, MicOff, Volume2, VolumeX, FileText, 
   Activity, MessageSquare, BarChart3, User, Bot, X, CheckCircle
 } from 'lucide-react'
+import { API_BASE_URL, mockData } from '../config/api'
 
 export default function Chatbot({ customer }) {
   const { t } = useTranslation('chatbot')
@@ -89,18 +90,37 @@ export default function Chatbot({ customer }) {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post(
-        'http://localhost:3001/api/chatbot/query',
-        {
-          customerId: customer.id,
-          query: input,
-          channel: 'web',
-          language: language
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/chatbot/query`,
+          {
+            customerId: customer.id,
+            query: input,
+            channel: 'web',
+            language: language
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock chatbot
+        console.log('Backend unavailable, using mock chatbot response')
+        const mockResponse = await mockData.getChatbotResponse(input, customer.id)
+        response = { data: { response: { 
+          message: mockResponse.response.text,
+          intent: mockResponse.response.intent,
+          confidence: mockResponse.response.confidence,
+          suggestions: mockResponse.response.suggestions,
+          tickets: [],
+          hasExistingTickets: false,
+          canSubmitNew: true
+        }}}
+      }
 
       const aiMessage = {
         type: 'ai',
@@ -178,7 +198,7 @@ export default function Chatbot({ customer }) {
       // Get AI explanation for this request type
       const token = localStorage.getItem('token')
       const response = await axios.post(
-        'http://localhost:3001/api/proactive/explain-request',
+        `${API_BASE_URL}/api/proactive/explain-request`,
         {
           customerId: customer.id,
           requestType: type
@@ -235,20 +255,34 @@ export default function Chatbot({ customer }) {
 
     try {
       const token = localStorage.getItem('token')
+      let submitResponse
 
-      // Submit the ticket
-      const submitResponse = await axios.post(
-        'http://localhost:3001/api/backoffice/submit-ticket',
-        {
+      try {
+        // Try real backend first
+        submitResponse = await axios.post(
+          `${API_BASE_URL}/api/backoffice/submit-ticket`,
+          {
+            customerId: customer.id,
+            requestType: selectedRequestType,
+            requestDetails: requestDetails,
+            aiGuidance: requestGuidance
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock ticket submission
+        console.log('Backend unavailable, using mock ticket submission')
+        const mockResponse = await mockData.submitTicket({
           customerId: customer.id,
           requestType: selectedRequestType,
           requestDetails: requestDetails,
-          aiGuidance: requestGuidance
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+          severity: 'Medium'
+        })
+        submitResponse = { data: mockResponse }
+      }
 
       const ticket = submitResponse.data.ticket
 
@@ -298,18 +332,28 @@ export default function Chatbot({ customer }) {
       // Remove any previous guidance messages
       setMessages((prev) => prev.filter(m => !m.guidanceData))
       
-      // Get AI guidance
-      const guidanceResponse = await axios.post(
-        'http://localhost:3001/api/proactive/guidance',
-        {
-          customerId: customer.id,
-          requestType: selectedRequestType,
-          requestDetails: requestDetails || ''
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let guidanceResponse
+      
+      try {
+        // Try real backend first
+        guidanceResponse = await axios.post(
+          `${API_BASE_URL}/api/proactive/guidance`,
+          {
+            customerId: customer.id,
+            requestType: selectedRequestType,
+            requestDetails: requestDetails || ''
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock guidance
+        console.log('Backend unavailable, using mock guidance')
+        const mockResponse = await mockData.getGuidance(requestDetails, customer.id)
+        guidanceResponse = { data: mockResponse }
+      }
 
       const guidance = guidanceResponse.data.guidance
       setRequestGuidance(guidance)

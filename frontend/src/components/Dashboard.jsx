@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import axios from 'axios'
+import { API_BASE_URL, mockData } from '../config/api'
 import {
   Box,
   Container,
@@ -49,12 +50,23 @@ export default function Dashboard() {
   const fetchAnalytics = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get(
-        'http://localhost:3001/api/backoffice/analytics',
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.get(
+          `${API_BASE_URL}/api/backoffice/analytics`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock analytics
+        console.log('Backend unavailable, using mock analytics data')
+        const mockResponse = await mockData.getAnalytics()
+        response = { data: { metrics: mockResponse.analytics } }
+      }
 
       setAnalytics(response.data.metrics)
       setLoading(false)

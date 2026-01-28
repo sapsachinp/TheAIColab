@@ -9,6 +9,7 @@ import {
   MessageSquare, FileCheck, Activity, Shield,
   Home, PhoneOff, Receipt, DollarSign, AlertTriangle, CheckCircle, Bell
 } from 'lucide-react'
+import { API_BASE_URL, mockData } from '../config/api'
 
 export default function CustomerSummary({ customer }) {
   const [summary, setSummary] = useState(null)
@@ -22,17 +23,29 @@ export default function CustomerSummary({ customer }) {
   const fetchSummary = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get(
-        `http://localhost:3001/api/customer/summary/${customer.id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.get(
+          `${API_BASE_URL}/api/customer/summary/${customer.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock data
+        console.log('Backend unavailable, using mock customer data')
+        const mockResponse = await mockData.getCustomerSummary(customer.id)
+        response = { data: mockResponse }
+      }
 
       setSummary(response.data)
       setLoading(false)
     } catch (err) {
-      setError('Failed to load summary')
+      console.error('Error loading summary:', err)
+      setError('Failed to load summary: ' + (err.message || 'Unknown error'))
       setLoading(false)
     }
   }

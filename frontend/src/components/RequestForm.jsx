@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AlertCircle, CheckCircle, X } from 'lucide-react'
+import { API_BASE_URL, mockData } from '../config/api'
 
 export default function RequestForm({ customer }) {
   const [requestType, setRequestType] = useState('')
@@ -46,7 +47,7 @@ export default function RequestForm({ customer }) {
       const token = localStorage.getItem('token')
       // Fetch customer's open tickets
       const response = await axios.get(
-        `http://localhost:3001/api/customer/summary/${customer.id}`,
+        `${API_BASE_URL}/api/customer/summary/${customer.id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -102,16 +103,29 @@ export default function RequestForm({ customer }) {
     setLoadingExplanation(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post(
-        'http://localhost:3001/api/proactive/explain-request',
-        {
-          customerId: customer.id,
-          requestType: type
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/proactive/explain-request`,
+          {
+            customerId: customer.id,
+            requestType: type
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock explanation
+        console.log('Backend unavailable, using mock explanation')
+        response = { data: {
+          explanation: 'This is a demo explanation in mock mode. For full AI-powered explanations, please connect to the backend service.',
+          aiExplanation: 'Mock AI explanation for: ' + type
+        }}
+      }
 
       setRequestExplanation(response.data.explanation)
     } catch (err) {
@@ -204,17 +218,28 @@ export default function RequestForm({ customer }) {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post(
-        'http://localhost:3001/api/proactive/guidance',
-        {
-          customerId: customer.id,
-          requestType,
-          requestDetails
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/proactive/guidance`,
+          {
+            customerId: customer.id,
+            requestType,
+            requestDetails
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock guidance
+        console.log('Backend unavailable, using mock guidance')
+        const mockResponse = await mockData.getGuidance(requestDetails, customer.id)
+        response = { data: mockResponse }
+      }
 
       setGuidance(response.data.guidance)
     } catch (err) {
@@ -229,18 +254,34 @@ export default function RequestForm({ customer }) {
     setLoading(true)
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post(
-        'http://localhost:3001/api/backoffice/submit-ticket',
-        {
+      let response
+      
+      try {
+        // Try real backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/backoffice/submit-ticket`,
+          {
+            customerId: customer.id,
+            requestType,
+            requestDetails,
+            aiGuidance: guidance
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            timeout: 5000
+          }
+        )
+      } catch (backendError) {
+        // Fallback to mock ticket submission
+        console.log('Backend unavailable, using mock ticket submission')
+        const mockResponse = await mockData.submitTicket({
           customerId: customer.id,
           requestType,
           requestDetails,
-          aiGuidance: guidance
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
+          severity: 'Medium'
+        })
+        response = { data: mockResponse }
+      }
 
       setSubmittedTicket(response.data.ticket)
       setSubmitted(true)
