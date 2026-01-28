@@ -56,10 +56,33 @@ npm run dev
 Frontend runs on http://localhost:5173
 
 ### 4. Login with Demo Account
-Use any of these credentials:
-- Email: `ahmed.mansoori@example.com` | Password: `demo123`
-- Email: `fatima.hassan@example.com` | Password: `demo123`
-- Email: `mohammed.hashimi@example.com` | Password: `demo123`
+Use any of these 6 diverse test accounts:
+
+| Customer | Email | Password | Scenario |
+|----------|-------|----------|----------|
+| **Ahmed** | `ahmed@example.com` | `password123` | ⚠️ Bill spike investigation |
+| **Fatima** | `fatima@example.com` | `password123` | ✅ Model customer (energy efficient) |
+| **Mohammed** | `mohammed@example.com` | `password123` | 🏊 Villa owner with pool |
+| **Sara** | `sara@example.com` | `password123` | 🚨 Critical overdue bill |
+| **Omar** | `omar@example.com` | `password123` | 🏢 Commercial account |
+| **Layla** | `layla@example.com` | `password123` | ⭐ Star customer (solar panels) |
+
+## 📊 What's New - Recent Enhancements
+
+### ✨ Enhanced Data & Humanization
+- **6 Diverse Test Accounts**: Covering scenarios from critical overdue to star customers
+- **Rich Historical Data**: 8 months of consumption history per customer with predictions
+- **Account Health Scoring**: 0-100 scale with color-coded status (Excellent/Good/Warning/Critical)
+- **Personalized AI Tips**: 3-4 context-specific recommendations per customer
+- **12 Humanized Interactions**: Empathetic, name-personalized AI responses with emotional intelligence
+
+### 📈 New Visualizations
+- **Historical Consumption Charts**: Dual Y-axis (AED + kWh) with Recharts
+- **Account Health Dashboard**: Progress bars, status badges, trend indicators
+- **Prediction Display**: Next month's forecasted bill shown with confidence scores
+- **Payment History**: Visual timeline of on-time vs late payments
+
+See [ENHANCEMENTS.md](ENHANCEMENTS.md) for complete details.
 
 ## 📁 Project Structure
 

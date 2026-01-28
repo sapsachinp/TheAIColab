@@ -89,21 +89,6 @@
       { "month": "2025-12", "amount": 510.20, "kwh": 845 },
       { "month": "2026-01", "amount": 520.75, "kwh": 862, "predicted": true }
     ],
-    "usagePatterns": {
-      "peakHours": "17:00-21:00",
-      "averageDaily": 14.2,
-      "highConsumptionReason": null,
-      "comparedToSimilar": "-12% lower than similar apartments"
-    }
-  },
-  {
-    "id": "C11223",
-    "name": "Mohammed Al Hashimi",
-    "nameAr": "محمد الهاشمي",
-    "email": "mohammed.hashimi@example.com",
-    "phone": "+971-50-456-7890",
-    "accountNumber": "DEWA-003-1122",
-    "address": "Emirates Hills, Villa 28",
     "accountHealth": {
       "status": "good",
       "score": 82,

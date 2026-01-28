@@ -29,9 +29,12 @@ export default function Login({ onLogin }) {
   }
 
   const demoAccounts = [
-    { email: 'ahmed.mansoori@example.com', name: 'Ahmed Al Mansoori' },
-    { email: 'fatima.hassan@example.com', name: 'Fatima Hassan' },
-    { email: 'mohammed.hashimi@example.com', name: 'Mohammed Al Hashimi' }
+    { email: 'ahmed@example.com', name: 'Ahmed (Warning - Bill Spike)', password: 'password123' },
+    { email: 'fatima@example.com', name: 'Fatima (Excellent - Model Customer)', password: 'password123' },
+    { email: 'mohammed@example.com', name: 'Mohammed (Good - Villa Owner)', password: 'password123' },
+    { email: 'sara@example.com', name: 'Sara (Critical - Overdue)', password: 'password123' },
+    { email: 'omar@example.com', name: 'Omar (Good - Commercial)', password: 'password123' },
+    { email: 'layla@example.com', name: 'Layla (Excellent - Star Customer)', password: 'password123' }
   ]
 
   return (
@@ -97,19 +100,22 @@ export default function Login({ onLogin }) {
 
         {/* Demo Accounts */}
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-sm text-gray-600 mb-3 font-medium">Demo Accounts (password: demo123):</p>
+          <p className="text-sm text-gray-600 mb-3 font-medium">Demo Accounts:</p>
           <div className="space-y-2">
             {demoAccounts.map((account) => (
               <button
                 key={account.email}
                 onClick={() => {
                   setEmail(account.email)
-                  setPassword('demo123')
+                  setPassword(account.password)
                 }}
                 className="w-full text-left px-3 py-2 text-sm bg-gray-50 hover:bg-gray-100 rounded border border-gray-200 transition"
               >
                 <div className="font-medium text-gray-900">{account.name}</div>
-                <div className="text-gray-500 text-xs">{account.email}</div>
+                <div className="text-gray-500 text-xs flex justify-between">
+                  <span>{account.email}</span>
+                  <span className="text-dewa-green">pw: {account.password}</span>
+                </div>
               </button>
             ))}
           </div>

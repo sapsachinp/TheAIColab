@@ -9,9 +9,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Simple in-memory user store (for hackathon demo)
 const users = [
+  { email: 'ahmed@example.com', password: 'password123', customerId: 'C12345' },
   { email: 'ahmed.mansoori@example.com', password: 'demo123', customerId: 'C12345' },
+  { email: 'fatima@example.com', password: 'password123', customerId: 'C67890' },
   { email: 'fatima.hassan@example.com', password: 'demo123', customerId: 'C67890' },
-  { email: 'mohammed.hashimi@example.com', password: 'demo123', customerId: 'C11223' }
+  { email: 'mohammed@example.com', password: 'password123', customerId: 'C11223' },
+  { email: 'mohammed.hashimi@example.com', password: 'demo123', customerId: 'C11223' },
+  { email: 'sara@example.com', password: 'password123', customerId: 'C44556' },
+  { email: 'omar@example.com', password: 'password123', customerId: 'C77889' },
+  { email: 'layla@example.com', password: 'password123', customerId: 'C99001' }
 ];
 
 /**
