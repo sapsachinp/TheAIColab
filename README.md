@@ -121,39 +121,166 @@ TheAIColab/
 
 ## 🎨 Key Features
 
-### 1. Customer Summary (AI-Powered)
-- **Bill Prediction**: ML-based forecasting with confidence scores
-- **Consumption Analysis**: Trend detection and variance calculation
-- **Proactive Alerts**: AI recommendations based on patterns
+### 1. Bilingual Customer Support (English/Arabic)
+- **i18next Integration**: 5 namespaces for organized translations
+- **RTL Layout**: Automatic right-to-left support for Arabic
+- **Dynamic Switching**: Language toggle with persistent preference
+- **Native Support**: All UI components, AI responses, and error messages
 
-### 2. Proactive Guidance
-- **Duplicate Detection**: Checks for existing open complaints
-- **Known Issue Alerts**: Matches against area-specific outages
-- **Bill Explanation**: AI analyzes consumption before ticket creation
-- **Confidence Scoring**: Low confidence = escalate to human
+### 2. Multi-Factor Authentication (MFA)
+- **Email OTP**: 6-digit codes with 5-minute expiration
+- **Rate Limiting**: 60-second cooldown between OTP requests
+- **JWT Tokens**: Access (8h) + Refresh (7d) token strategy
+- **Demo Bypass**: "000000" OTP for testing purposes
+- **Security**: bcrypt password hashing, audit logging
 
-### 3. Omnichannel Chatbot
-- **Voice Input**: Web Speech API (STT)
-- **Voice Output**: Text-to-Speech with empathetic tone
-- **Intent Classification**: Real-time query categorization
-- **Context Awareness**: Customer history in every response
+### 3. Customer 360 View
+- **Business Partner Information**: Complete account hierarchy
+- **Multiple Contract Accounts**: Residential, commercial, villa accounts
+- **Service Details**: Electricity, Water, Sewerage, District Cooling
+- **Outstanding Dues**: Account-level and total balance tracking
+- **Account Health**: 0-100 score with status indicators (Excellent/Good/Warning/Critical)
+- **Open Requests**: Real-time ticket tracking with status
 
-### 4. Analytics Dashboard
-- **FCR Rate**: First Contact Resolution tracking
-- **Ticket Deflection**: % prevented through proactive guidance
-- **Bill Prediction Accuracy**: MAPE calculation
-- **Continuous Learning**: Feedback loop visualization
+### 4. AI-Powered Predictions & Insights
+- **Bill Prediction**: ML-based forecasting with confidence scores (80-90% accuracy)
+- **Consumption Analysis**: Trend detection, variance calculation, pattern recognition
+- **Personalized Recommendations**: 3-4 context-specific energy-saving tips per customer
+- **Proactive Alerts**: AI detects anomalies before customers notice
+- **Historical Visualization**: 8 months of consumption data with dual Y-axis charts (AED + kWh)
+
+### 5. Proactive Request Guidance
+- **Duplicate Detection**: Checks for existing open tickets
+- **AI Request Analysis**: Analyzes customer data before submission
+- **Smart Recommendations**: Suggests solutions based on historical patterns
+- **Confidence Scoring**: High confidence (>80%) = auto-resolve, Low = escalate to agent
+- **Request Type Explanations**: Dropdown selection triggers AI explanation of common causes
+- **Multi-Channel Parity**: Same guidance quality in web form and chat
+
+### 6. Omnichannel Chatbot (Voice + Text)
+- **Voice Input**: Web Speech API (Speech-to-Text)
+- **Voice Output**: Text-to-Speech with natural voices
+- **Intent Classification**: Real-time query categorization (billing, service, outage, general)
+- **Context Awareness**: Full customer history available in every interaction
+- **Ticket Tracking**: Query and track request status via chat
+- **Request Submission**: Complete complaint flow within chat interface
+- **Empathy Engine**: Humanized, name-personalized responses
+
+### 7. Comprehensive Ticket Management
+- **Persistent Storage**: tickets.json with full metadata
+- **Status Tracking**: Pending, In Progress, Resolved
+- **Priority Classification**: High, Medium, Low (AI-assisted)
+- **AI Metadata**: Includes guidance confidence, recommendations, analysis
+- **Multi-Channel Access**: Track via web dashboard or chat
+- **Timestamp Tracking**: Created, updated, resolved timestamps
+
+### 8. Cost Savings Analytics Dashboard
+- **Total Savings**: AED calculation with traditional vs. AI cost comparison
+- **Cost Per Call**: Human agent (AED 25) vs. AI (AED 0.50)
+- **Call Deflection Rate**: Percentage of issues resolved without escalation
+- **Projections**: Monthly and yearly savings forecasts
+- **Agent Capacity**: Equivalent FTE agents freed by AI automation
+- **ROI Tracking**: Clear business value metrics for executives
+
+### 9. Integrated Bill Payment
+- **DEWA Portal**: Embedded iframe (https://www.dewa.gov.ae/consumer/billing/easypay)
+- **Seamless UX**: In-app payment without external redirects
+- **Security**: Sandbox isolation, no credential storage
+- **Easy Navigation**: One-click return to dashboard
+- **Future**: Direct API integration, payment status tracking
+
+### 10. Unified AI Brain Architecture
+- **Central Orchestrator**: Coordinates all AI modules (intent, empathy, proactive, prediction)
+- **OpenAI Integration**: GPT-3.5-turbo for advanced analysis
+- **Rule-Based Fallback**: Local algorithms when OpenAI unavailable
+- **Sentiment Analysis**: Detects urgency and emotional tone
+- **Knowledge Graph**: Entity linking for DEWA-specific context
+- **Continuous Learning**: ai-logs.json tracks all interactions for improvement
 
 ## 🔧 API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/auth/login` | POST | Authenticate user |
-| `/api/customer/summary/:id` | GET | AI insights + open complaints |
-| `/api/proactive/guidance` | POST | Pre-submission analysis |
-| `/api/chatbot/query` | POST | Chat with STT/TTS |
-| `/api/backoffice/submit-ticket` | POST | Create ticket |
-| `/api/backoffice/analytics` | GET | Metrics dashboard |
+### Authentication
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/api/auth/login` | POST | Authenticate user (email + password) | No |
+| `/api/auth/verify-otp` | POST | Verify OTP code for MFA | No |
+| `/api/auth/resend-otp` | POST | Resend OTP to user's email | No |
+| `/health` | GET | Health check endpoint | No |
+
+### Customer Services
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/api/customer/summary/:id` | GET | Get customer 360 view with AI insights | Yes (JWT) |
+
+### Proactive Guidance
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/api/proactive/guidance` | POST | Get AI guidance before submission | Yes (JWT) |
+| `/api/proactive/explain-request` | POST | Explain request type with AI | Yes (JWT) |
+
+### Chatbot
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/api/chatbot/query` | POST | Process chat query with AI brain | Yes (JWT) |
+| `/api/chatbot/submit-request` | POST | Submit request via chat | Yes (JWT) |
+
+### Back-Office & Tickets
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/api/backoffice/submit` | POST | Create new ticket | Yes (JWT) |
+| `/api/backoffice/tickets` | GET | List all tickets with filters | Yes (JWT) |
+| `/api/backoffice/analytics` | GET | Get dashboard metrics & cost savings | Yes (JWT) |
+
+### Request/Response Examples
+
+#### POST /api/auth/login
+```json
+// Request
+{
+  "email": "ahmed@example.com",
+  "password": "password123",
+  "language": "en"
+}
+
+// Response (MFA Required)
+{
+  "requiresMFA": true,
+  "expiresIn": 5,
+  "message": "OTP sent to your email"
+}
+```
+
+#### POST /api/proactive/guidance
+```json
+// Request
+{
+  "customerId": "C12345",
+  "requestType": "billing_inquiry",
+  "description": "My bill is higher than usual"
+}
+
+// Response
+{
+  "confidence": 0.85,
+  "shouldSubmit": false,
+  "analysis": {
+    "billingSummary": {
+      "currentBill": "450",
+      "avgBill": "380",
+      "variance": "18.4%"
+    },
+    "consumptionInsights": {
+      "trend": "increasing",
+      "spike": true,
+      "possibleReasons": ["AC usage", "Pool pump"]
+    }
+  },
+  "recommendations": [
+    "Check AC thermostat settings",
+    "Review pool pump timer"
+  ]
+}
+```
 
 ## 🧪 Testing
 
@@ -179,11 +306,82 @@ docker-compose up
 
 ## 🌐 Technology Stack
 
-- **Frontend**: React 18, Vite, Tailwind CSS, Recharts
-- **Backend**: Node.js, Express.js, Winston
-- **AI**: OpenAI GPT-4 (with rule-based fallback)
-- **Voice**: Web Speech API (STT/TTS)
-- **Data**: JSON (dev) → PostgreSQL/MongoDB (production)
+### Frontend
+- **Framework**: React 18.2.0 (Functional Components + Hooks)
+- **Build Tool**: Vite 5.0.11 (Fast HMR, optimized bundling)
+- **Routing**: React Router v6 (Client-side routing with guards)
+- **HTTP Client**: Axios 1.x (API communication with interceptors)
+- **Charts**: Recharts 2.x (Consumption visualization, dual Y-axis)
+- **Internationalization**: react-i18next 13.x (5 namespaces: common, chatbot, customerSummary, dashboard, requestForm)
+- **Styling**: Tailwind CSS 3.x (Utility-first CSS framework)
+- **RTL Support**: tailwindcss-rtl 0.9.x (Arabic language layout)
+- **State Management**: React Context API (Language, Authentication)
+- **Voice**: Web Speech API (Speech-to-Text & Text-to-Speech)
+- **Icons**: Native Emoji (Accessibility-friendly)
+
+### Backend
+- **Runtime**: Node.js 18+ with ES Modules
+- **Framework**: Express.js 4.x (RESTful API server)
+- **Authentication**: 
+  - jsonwebtoken 9.x (JWT tokens: access 8h, refresh 7d)
+  - bcrypt 5.x (Password hashing with 10 salt rounds)
+  - Custom OTP service (6-digit codes, 5-minute expiration)
+- **Email**: Nodemailer 6.x (OTP delivery, SMTP/Gmail integration)
+- **Logging**: Winston 3.x (Structured JSON logging, error.log + combined.log)
+- **AI/ML**: OpenAI 4.x (GPT-3.5-turbo with rule-based fallback)
+- **CORS**: cors 2.x (Cross-origin resource sharing)
+- **Environment**: dotenv 16.x (Environment variable management)
+- **Data Storage**: JSON files (customers.json, tickets.json, ai-logs.json)
+  - Future: PostgreSQL/MongoDB/Azure Cosmos DB
+
+### AI & Integration Services
+
+#### OpenAI Integration
+- **Model**: GPT-3.5-turbo
+- **Use Cases**:
+  - Advanced consumption analysis and trend detection
+  - Bill prediction with ML-enhanced forecasting
+  - Personalized energy-saving recommendations
+  - Natural language understanding for complex queries
+  - Context-aware customer responses
+- **Configuration**:
+  - Temperature: 0.7 (Balanced creativity/accuracy)
+  - Max Tokens: 500
+  - Fallback: Rule-based AI algorithms (pattern matching, keyword analysis)
+- **Cost Optimization**: Caching frequent queries, rule-based pre-filtering
+
+#### Email Service (Nodemailer)
+- **Purpose**: MFA OTP delivery, notifications
+- **Provider**: Gmail (dev), SendGrid (production recommended)
+- **Features**: HTML templates, bilingual support (EN/AR)
+- **Security**: App-specific passwords, encrypted connections
+
+#### DEWA Payment Portal
+- **URL**: https://www.dewa.gov.ae/consumer/billing/easypay
+- **Integration**: Embedded iframe with sandbox security
+- **Future**: Direct API integration, payment webhooks, transaction sync
+
+#### Web Speech API
+- **Speech-to-Text**: Browser native (Chrome/Edge)
+- **Text-to-Speech**: Browser native with voice selection
+- **Languages**: English, Arabic
+- **Fallback**: Text-only input/output
+
+### DevOps & Deployment
+- **Containerization**: Docker + docker-compose
+- **Package Manager**: npm
+- **Version Control**: Git + GitHub
+- **Documentation**: Markdown (README, ARCHITECTURE, ENHANCEMENTS, TESTING_GUIDE)
+- **Future CI/CD**: GitHub Actions, Azure DevOps
+
+### Security
+- **Authentication**: Multi-Factor Authentication (MFA) with email OTP
+- **Password Storage**: bcrypt hashing (cost factor 10)
+- **API Security**: JWT token validation on all protected routes
+- **CORS**: Configured for trusted origins
+- **Audit Logging**: Winston structured logs with timestamps
+- **Secrets**: Environment variables (.env, never committed)
+- **Future**: Azure Key Vault, encryption at rest, GDPR compliance
 
 ## 📊 Sample Data
 

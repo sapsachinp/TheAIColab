@@ -294,5 +294,79 @@
         "note": "Ticket created via web portal"
       }
     ]
+  },
+  {
+    "ticketId": "DEWA-1769594284512-4391",
+    "customerId": "C11223",
+    "requestType": "billing_inquiry",
+    "requestDetails": "high consumption",
+    "aiGuidance": {
+      "intent": {
+        "category": "billing_inquiry",
+        "confidence": 0.85,
+        "reasoning": "Bill-related keywords detected"
+      },
+      "proactiveAdvice": {
+        "suggestion": "Your request will be processed. We'll assign it to the appropriate team.",
+        "confidence": 0.5,
+        "shouldDeflect": false,
+        "reason": "needs_human_review"
+      },
+      "customerDataAnalysis": {
+        "billingSummary": {
+          "currentBill": 1180.5,
+          "predictedBill": 1250,
+          "variance": "5.9",
+          "trend": "increasing"
+        },
+        "consumptionInsights": {
+          "trend": "increasing",
+          "variance": 12.63,
+          "average": "1109.79",
+          "latest": "1250.00",
+          "comparedToSimilar": "+5% higher than similar villas"
+        },
+        "accountStatus": {
+          "openComplaints": 1,
+          "hasUnpaidBills": false,
+          "unpaidAmount": 0
+        },
+        "usagePatterns": {
+          "reason": "Large villa with pool heating",
+          "peakHours": "12:00-16:00"
+        }
+      },
+      "situationAnalysis": "Mohammed Al Hashimi, your account shows an increasing consumption trend (12.63% above average). Your last bill was AED 1180.5, and based on current usage, the next bill is predicted to be AED 1250.",
+      "rootCause": null,
+      "recommendations": [
+        "Review your AC settings - reducing to 24°C can save up to 20% on bills",
+        "Check for any new appliances or increased usage during peak hours (12 PM - 6 PM)",
+        "Consider a home energy audit through DEWA's Green Program"
+      ],
+      "priority": "medium",
+      "customerImpact": "Medium",
+      "shouldProceed": true,
+      "aiPowered": false,
+      "timestamp": "2026-01-28T09:57:58.000Z"
+    },
+    "status": "Open",
+    "priority": "Medium",
+    "createdAt": "2026-01-28T09:58:04.512Z",
+    "updatedAt": "2026-01-28T09:58:04.512Z",
+    "aiRecommendations": [
+      "Review your AC settings - reducing to 24°C can save up to 20% on bills",
+      "Check for any new appliances or increased usage during peak hours (12 PM - 6 PM)",
+      "Consider a home energy audit through DEWA's Green Program"
+    ],
+    "channel": "web",
+    "assignedTo": null,
+    "notes": [],
+    "statusHistory": [
+      {
+        "status": "Open",
+        "timestamp": "2026-01-28T09:58:04.512Z",
+        "note": "Ticket created via web portal"
+      }
+    ]
   }
 ]

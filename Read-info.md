@@ -57,7 +57,7 @@ A **unified Humanized AI ecosystem** that:
   - Step-by-step service walkthroughs
   - Form filling assistance and real-time validation
   - Error detection and corrective guidance
-- 24/7 availability with multilingual support (Arabic, English, Urdu, others)
+- 24/7 availability with multilingual support (Arabic, English, others)
 - Context-aware responses using GenAI and intent detection
 - Proactive guidance based on user behavior and journey analysis
 - CRM-integrated ticket creation and tracking
