@@ -50,25 +50,45 @@ export default function Login({ onLogin }) {
 
     try {
       console.log('🔐 Calling backend login API...')
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/login`,
-        { email, password, language },
-        { timeout: 8000 }
-      )
+      let response
+      let isBackendAvailable = true
+
+      try {
+        // Try backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/auth/login`,
+          { email, password, language },
+          { timeout: 5000 }
+        )
+        console.log('✅ Backend responded successfully')
+      } catch (backendError) {
+        // Backend unavailable - fall back to local mock authentication
+        console.warn('⚠️ Backend unavailable, using local authentication:', backendError.message)
+        isBackendAvailable = false
+        
+        try {
+          response = await mockAuth.login(email, password)
+          response = { data: response }
+          setDemoMode(true)
+          console.log('✅ Local authentication mode activated')
+        } catch (localError) {
+          throw new Error(localError.message)
+        }
+      }
       
       if (response.data.requiresMFA) {
-        console.log('✅ Backend MFA required - waiting for OTP')
+        console.log('✅ MFA required - waiting for OTP')
         setMfaRequired(true)
         setOtpExpiresIn(response.data.expiresIn || 5)
         setCountdown((response.data.expiresIn || 5) * 60)
         setError('')
       } else {
-        setError('Unexpected response from backend')
+        setError('Unexpected response from authentication server')
       }
       setLoading(false)
     } catch (err) {
-      console.error('❌ Backend auth failed:', err.message)
-      setError('Cannot connect to authentication server: ' + (err.message || 'Unknown error'))
+      console.error('❌ Authentication failed:', err.message)
+      setError(err.message || 'Invalid credentials or authentication server unavailable')
       setLoading(false)
     }
   }
@@ -79,28 +99,43 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      console.log('🔐 Verifying OTP with backend...')
-      const response = await axios.post(
-        `${API_BASE_URL}/api/auth/verify-otp`,
-        { email, otp, language },
-        { timeout: 8000 }
-      )
+      console.log('🔐 Verifying OTP...')
+      let response
+
+      try {
+        // Try backend first
+        response = await axios.post(
+          `${API_BASE_URL}/api/auth/verify-otp`,
+          { email, otp, language },
+          { timeout: 5000 }
+        )
+        console.log('✅ OTP verified with backend')
+      } catch (backendError) {
+        // Fall back to local authentication
+        console.warn('⚠️ Backend unavailable, using local OTP verification')
+        
+        try {
+          response = await mockAuth.verifyOTP(email, otp)
+          response = { data: response }
+          setDemoMode(true)
+          console.log('✅ Local OTP verification successful')
+        } catch (localError) {
+          throw new Error(localError.message)
+        }
+      }
       
       if (response.data.success && response.data.token && response.data.customer) {
-        console.log('✅ OTP verified, got JWT token from backend')
+        console.log('✅ Authentication successful, got token')
         console.log('📝 Token:', response.data.token.substring(0, 30) + '...')
+        console.log('📊 Customer:', response.data.customer.name)
         onLogin(response.data.token, response.data.customer)
       } else {
-        setError('Invalid response from backend')
+        setError('Invalid response from authentication server')
       }
       setLoading(false)
     } catch (err) {
       console.error('❌ OTP verification failed:', err.message)
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error)
-      } else {
-        setError('Cannot verify OTP: ' + (err.message || 'Unknown error'))
-      }
+      setError(err.message || 'Invalid OTP or authentication failed')
       setLoading(false)
     }
   }
@@ -113,17 +148,21 @@ export default function Login({ onLogin }) {
 
     try {
       let response
+      
       try {
         // Try real backend first
         response = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, {
           email,
           language
-        }, { timeout: 1000 })  // Reduced to 1 second for faster fallback
+        }, { timeout: 5000 })
+        console.log('✅ Backend OTP resend successful')
       } catch (backendError) {
         // Fallback to mock service
-        console.log('Backend unavailable, using mock OTP resend')
+        console.warn('⚠️ Backend unavailable, using local OTP resend')
         const mockResponse = await mockAuth.resendOTP(email)
         response = { data: mockResponse }
+        setDemoMode(true)
+        console.log('✅ Local OTP resend successful')
       }
 
       if (response.data.success) {
@@ -132,8 +171,10 @@ export default function Login({ onLogin }) {
         setResendCooldown(60) // 60 second cooldown
         setOtp('')
         setError('')
+        console.log('✅ OTP resend successful')
       }
     } catch (err) {
+      console.error('❌ OTP resend failed:', err.message)
       setError(err.response?.data?.error || err.message || 'Failed to resend code.')
     } finally {
       setLoading(false)
@@ -435,6 +476,23 @@ export default function Login({ onLogin }) {
           <Shield className="w-5 h-5 text-dewa-green" />
           <span className="font-medium">{language === 'en' ? 'Secured with MFA' : 'محمي بالمصادقة متعددة العوامل'}</span>
         </motion.div>
+
+        {demoMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl mb-6 flex items-center gap-3"
+          >
+            <div className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-blue-600 text-xs font-bold">ℹ</span>
+            </div>
+            <span className="text-sm">
+              {language === 'en' 
+                ? '✅ Operating in Demo Mode - Using local authentication for testing' 
+                : '✅ يعمل في وضع التجربة - استخدام المصادقة المحلية للاختبار'}
+            </span>
+          </motion.div>
+        )}
 
         <AnimatePresence>
           {error && (
