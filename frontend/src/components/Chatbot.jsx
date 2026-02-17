@@ -90,10 +90,16 @@ export default function Chatbot({ customer }) {
 
     try {
       const token = localStorage.getItem('token')
+      console.log('💬 Chat: Sending message...')
+      console.log('  Token:', token ? token.substring(0, 30) + '...' : 'NO TOKEN')
+      console.log('  Customer:', customer.id)
+      
       let response
+      let isRealData = false
       
       try {
-        // Try real backend first
+        // Try real backend with OpenAI API integration (longer timeout for API processing)
+        console.log('  🔄 Calling API: /api/chatbot/query')
         response = await axios.post(
           `${API_BASE_URL}/api/chatbot/query`,
           {
@@ -104,12 +110,15 @@ export default function Chatbot({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 10000  // 10 seconds for OpenAI API processing + backend logic
           }
         )
+        console.log('  ✅ SUCCESS - Got real OpenAI response')
+        isRealData = true
       } catch (backendError) {
-        // Fallback to mock chatbot
-        console.log('Backend unavailable, using mock chatbot response')
+        // Only fallback to mock data if backend truly unavailable
+        console.error('  ❌ API FAILED:', backendError.message)
+        console.log('  ⚠️ Using mock chatbot response')
         const mockResponse = await mockData.getChatbotResponse(input, customer.id)
         response = { data: { response: { 
           message: mockResponse.response.text,
@@ -118,8 +127,14 @@ export default function Chatbot({ customer }) {
           suggestions: mockResponse.response.suggestions,
           tickets: [],
           hasExistingTickets: false,
-          canSubmitNew: true
+          canSubmitNew: true,
+          _isRealData: false
         }}}
+      }
+      
+      // Ensure data source indicator is set
+      if (!response.data.response._isRealData) {
+        response.data.response._isRealData = isRealData
       }
 
       const aiMessage = {

@@ -23,24 +23,44 @@ export default function CustomerSummary({ customer }) {
   const fetchSummary = async () => {
     try {
       const token = localStorage.getItem('token')
+      console.log('📊 Fetching Summary...')
+      console.log('  Token in localStorage:', token ? token.substring(0, 30) + '...' : 'NO TOKEN')
+      console.log('  Customer ID:', customer.id)
+      
       let response
+      let isRealData = false
       
       try {
-        // Try real backend first with 3 second timeout
+        // Try real backend first with 8 second timeout (OpenAI API calls can take time)
+        console.log('  🔄 Calling API: /api/customer/summary/' + customer.id)
         response = await axios.get(
           `${API_BASE_URL}/api/customer/summary/${customer.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 3000  // 3 seconds to get real AI data
+            timeout: 8000  // 8 seconds for OpenAI API processing
           }
         )
-        console.log('✅ Loaded real data from backend')
+        console.log('  ✅ SUCCESS - Got real AI data from backend')
+        isRealData = true
       } catch (backendError) {
-        // Fallback to mock data
-        console.log('⚠️ Backend unavailable, using mock customer data')
+        // Only use mock data as absolute last resort
+        console.error('  ❌ API FAILED:', backendError.message)
+        console.log('  ⚠️ Falling back to mock data')
         const mockResponse = await mockData.getCustomerSummary(customer.id)
         response = { data: mockResponse }
       }
+      
+      // Add indicator of data source
+      if (response.data) {
+        response.data._isRealData = isRealData
+      }
+
+      console.log('  📦 Response:', {
+        hasAiInsights: !!response.data.aiInsights,
+        hasBillPrediction: !!response.data.aiInsights?.billPrediction,
+        hasRecommendations: response.data.aiInsights?.recommendations?.length,
+        isRealData: isRealData
+      })
 
       setSummary(response.data)
       setLoading(false)

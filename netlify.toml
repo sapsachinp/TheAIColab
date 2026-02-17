@@ -1,12 +1,74 @@
+# ======================================================================
+# DEWA AI Support - Netlify Deployment Configuration
+# ======================================================================
+# This file configures how your React frontend is built and deployed
+# on Netlify. The backend is deployed separately.
+# ======================================================================
+
 [build]
+  # Frontend directory to build
   base = "frontend"
+  
+  # Build command
   command = "npm run build"
+  
+  # Where to publish built files
   publish = "dist"
 
+# ======================================================================
+# Build Environment Configuration
+# ======================================================================
+[build.environment]
+  # Use Node.js 18 (LTS)
+  NODE_VERSION = "18"
+  
+  # Frontend API URL - Set in Netlify Dashboard
+  # Development: VITE_API_URL=http://localhost:3001
+  # Production: VITE_API_URL=https://your-backend-domain.com
+  # 
+  # Instructions to set in Netlify:
+  # 1. Netlify Dashboard → Settings → Build & Deploy → Environment
+  # 2. Add: Key=VITE_API_URL, Value=https://your-backend-domain.com
+  # 3. Redeploy
+  
+  # Optional: Reduce logs in production
+  # VITE_LOG_LEVEL = "warn"
+
+# ======================================================================
+# SPA (Single Page Application) Configuration
+# ======================================================================
+# All routes are redirected to index.html for client-side routing
+# This allows React Router to handle all navigation
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[build.environment]
-  NODE_VERSION = "18"
+# ======================================================================
+# Security Headers
+# ======================================================================
+# Prevent clickjacking and ensure proper content encoding
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Allow backend API calls from this frontend
+    Access-Control-Allow-Credentials = "true"
+
+# ======================================================================
+# Cache Configuration
+# ======================================================================
+# Cache HTML files briefly (for updates)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=300"  # 5 minutes
+
+# Cache CSS/JS files long term (they have hash in filename)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"  # 1 year

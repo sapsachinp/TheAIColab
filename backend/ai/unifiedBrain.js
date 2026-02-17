@@ -37,6 +37,7 @@ class UnifiedBrain {
       let aiPredictions = null;
       if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key') {
         try {
+          console.log('🔄 Calling OpenAI API for customer insights analysis...');
           const prompt = `Analyze this DEWA customer's energy consumption data and provide insights:
 
 Customer: ${customer.name}
@@ -77,13 +78,22 @@ Format as JSON with keys: predictedBill, confidence, trendExplanation, recommend
           // Try to parse JSON response
           try {
             aiPredictions = JSON.parse(aiResponse);
-          } catch (e) {
-            console.log('OpenAI response not JSON, using text:', aiResponse);
-            aiPredictions = { rawInsight: aiResponse };
+            console.log('✅ Received real OpenAI insights:', {
+              predictedBill: aiPredictions.predictedBill,
+              confidence: aiPredictions.confidence,
+              recommendations: aiPredictions.recommendations?.length || 0
+            });
+          } catch (parseError) {
+            console.warn('⚠️  OpenAI response not valid JSON, parsing text:', parseError.message);
+            // Try to extract data from text response
+            aiPredictions = this.parseTextResponse(aiResponse);
           }
         } catch (openaiError) {
-          console.error('OpenAI API error:', openaiError.message);
+          console.error('❌ OpenAI API error:', openaiError.message || openaiError);
+          console.log('⚠️  Will use local bill prediction instead of AI');
         }
+      } else {
+        console.log('⚠️  No OpenAI API key found, using local prediction instead of real AI');
       }
 
       // Use OpenAI predictions if available, otherwise use local bill predictor
@@ -196,11 +206,19 @@ Format as JSON with keys: situationAnalysis, rootCause, recommendations (array o
           const aiResponse = completion.choices[0].message.content;
           try {
             aiAnalysis = JSON.parse(aiResponse);
-          } catch (e) {
-            console.log('OpenAI response not JSON:', aiResponse);
+          } catch (parseError) {
+            console.warn('⚠️  OpenAI response not valid JSON in analyzeRequest:', parseError.message);
+            // Use text response if JSON parsing fails
+            aiAnalysis = {
+              situationAnalysis: aiResponse,
+              rootCause: 'See analysis above',
+              recommendations: [aiResponse],
+              priority: 'medium',
+              customerImpact: 'Medium'
+            };
           }
         } catch (openaiError) {
-          console.error('OpenAI API error:', openaiError.message);
+          console.error('❌ OpenAI API error in analyzeRequest:', openaiError.message || openaiError);
         }
       }
 
@@ -463,6 +481,31 @@ Format as JSON with keys: situationAnalysis, rootCause, recommendations (array o
   }
 
   /**
+   * Parse text response from OpenAI when JSON parsing fails
+   * @param {string} text - OpenAI text response
+   * @returns {Object} Parsed insights or empty object
+   */
+  parseTextResponse(text) {
+    try {
+      // Try to extract numbers that look like bills/amounts
+      const billMatch = text.match(/(\d+\.?\d*)\s*(?:AED|aed|dhs)/);
+      const confidenceMatch = text.match(/(?:confidence|confidence level)[:\s]*(?:\.)?(\d+\.?\d*)/i);
+      
+      return {
+        predictedBill: billMatch ? parseFloat(billMatch[1]) : null,
+        confidence: confidenceMatch ? Math.min(1, Math.max(0, parseFloat(confidenceMatch[1]))) : 0.7,
+        trendExplanation: text,
+        recommendations: [text],
+        riskLevel: text.toLowerCase().includes('risk') ? 'high' : 'low',
+        textBased: true
+      };
+    } catch (e) {
+      console.warn('Unable to parse text response:', e.message);
+      return {};
+    }
+  }
+
+  /**
    * Explain request type with AI-powered insights
    * @param {Object} params - Request parameters
    * @returns {Promise<Object>} Explanation object
@@ -585,8 +628,9 @@ Provide a brief (2-3 sentences) personalized insight for THIS SPECIFIC CUSTOMER 
           });
 
           aiInsights = completion.choices[0].message.content.trim();
+          console.log('✅ Generated personalized insight using OpenAI API');
         } catch (openaiError) {
-          console.error('OpenAI API error in explainRequestType:', openaiError.message);
+          console.error('❌ OpenAI API error in explainRequestType:', openaiError.message || openaiError);
         }
       }
 

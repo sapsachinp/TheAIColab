@@ -23,9 +23,11 @@ class EmpathyResponse {
 
       // For demo: use template-based responses as fallback
       if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key') {
+        console.log('⚠️  Using template-based response (no real OpenAI API key)');
         return this.templateResponse(intent, context, language);
       }
 
+      console.log('🔄 Generating empathetic response with real OpenAI API...');
       const systemPrompt = `You are a compassionate DEWA customer service AI assistant. Your responses should be:
 1. Empathetic and understanding
 2. Clear and concise
@@ -42,7 +44,7 @@ Language: ${language || 'en'}
 Provide a helpful, empathetic response.`;
 
       const response = await openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-4',
+        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
@@ -53,13 +55,15 @@ Provide a helpful, empathetic response.`;
 
       const message = response.choices[0].message.content;
 
+      console.log('✅ Generated real empathetic response using OpenAI API');
       return {
         message,
-        suggestions: this.extractSuggestions(intent),
+        suggestions: this.extractSuggestions(params.intent),
         tone: 'empathetic'
       };
     } catch (error) {
-      console.error('Empathy response error:', error);
+      console.error('❌ OpenAI API error in empathy response:', error.message || error);
+      console.log('⚠️  Using template-based response instead');
       return this.templateResponse(params.intent, params.context, params.language);
     }
   }

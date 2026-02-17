@@ -36,9 +36,11 @@ class IntentDetection {
     try {
       // For demo: use rule-based classification as fallback
       if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key') {
+        console.log('⚠️  Using rule-based intent classification (no real OpenAI API key)');
         return this.ruleBasedClassify(type, details);
       }
 
+      console.log('🔄 Making real OpenAI API call for intent detection...');
       const prompt = `Classify the following customer request into one of these categories: ${this.categories.join(', ')}.
 
 Request Type: ${type}
@@ -47,7 +49,7 @@ Details: ${details}
 Respond with JSON: {"category": "category_name", "confidence": 0.0-1.0, "reasoning": "brief explanation"}`;
 
       const response = await openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-4',
+        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: 'You are an AI intent classifier for DEWA customer service.' },
           { role: 'user', content: prompt }
@@ -57,13 +59,19 @@ Respond with JSON: {"category": "category_name", "confidence": 0.0-1.0, "reasoni
       });
 
       const result = JSON.parse(response.choices[0].message.content);
+      console.log('✅ Intent classified using real OpenAI API:', result.category, `(confidence: ${result.confidence})`);
       return {
         category: result.category,
         confidence: result.confidence,
         reasoning: result.reasoning
       };
     } catch (error) {
-      console.error('Intent detection error:', error);
+      if (error instanceof SyntaxError) {
+        console.warn('⚠️  OpenAI returned non-JSON response, falling back to rule-based:', error.message);
+        return this.ruleBasedClassify(type, details);
+      }
+      console.error('❌ OpenAI API error in intent detection:', error.message || error);
+      console.log('⚠️  Falling back to rule-based classification');
       return this.ruleBasedClassify(type, details);
     }
   }

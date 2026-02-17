@@ -103,10 +103,15 @@ export default function RequestForm({ customer }) {
     setLoadingExplanation(true)
     try {
       const token = localStorage.getItem('token')
+      console.log('📝 Request: Generating explanation...')
+      console.log('  Token:', token ? token.substring(0, 30) + '...' : 'NO TOKEN')
+      console.log('  Type:', type)
+      
       let response
       
       try {
         // Try real backend first
+        console.log('  🔄 Calling API: /api/proactive/explain-request')
         response = await axios.post(
           `${API_BASE_URL}/api/proactive/explain-request`,
           {
@@ -115,12 +120,14 @@ export default function RequestForm({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 8000
           }
         )
+        console.log('  ✅ SUCCESS - Got AI explanation')
       } catch (backendError) {
         // Fallback to mock explanation
-        console.log('Backend unavailable, using mock explanation')
+        console.error('  ❌ API FAILED:', backendError.message)
+        console.log('  ⚠️ Using mock explanation')
         response = { data: {
           explanation: 'This is a demo explanation in mock mode. For full AI-powered explanations, please connect to the backend service.',
           aiExplanation: 'Mock AI explanation for: ' + type

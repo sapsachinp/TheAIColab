@@ -51,22 +51,29 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem('token')
       let response
+      let isRealData = false
       
       try {
-        // Try real backend first with 3 second timeout
+        // Try real backend first with 8 second timeout (OpenAI API analytics processing)
         response = await axios.get(
           `${API_BASE_URL}/api/backoffice/analytics`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 3000  // 3 seconds to get real AI analytics
+            timeout: 8000  // 8 seconds for real analytics with AI-driven insights
           }
         )
-        console.log('✅ Loaded real analytics from backend')
+        console.log('✅ Loaded REAL analytics from OpenAI-powered backend')
+        isRealData = true
       } catch (backendError) {
-        // Fallback to mock analytics
-        console.log('⚠️ Backend unavailable, using mock analytics data')
+        // Only use mock data as fallback
+        console.log('⚠️ Backend unavailable (OpenAI analytics timeout), using mock data')
         const mockResponse = await mockData.getAnalytics()
         response = { data: { metrics: mockResponse.analytics } }
+      }
+      
+      // Add data source indicator
+      if (response.data && response.data.metrics) {
+        response.data.metrics._isRealData = isRealData
       }
 
       setAnalytics(response.data.metrics)

@@ -35,7 +35,27 @@ const logger = winston.createLogger({
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Allow localhost on any port (for development)
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
+    }
+    
+    // Allow the explicitly configured frontend URL (for production)
+    // This should be set in .env to your Netlify URL, e.g., https://your-site.netlify.app
+    if (origin === process.env.FRONTEND_URL) {
+      return callback(null, true);
+    }
+    
+    // Log unauthorized CORS attempts for security monitoring
+    console.warn(`CORS blocked request from unauthorized origin: ${origin}`);
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(express.json());

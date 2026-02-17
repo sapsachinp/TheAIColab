@@ -49,34 +49,26 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      // Demo Mode - Skip validation and go directly to OTP screen
-      if (demoMode) {
-        console.log('Demo mode enabled - bypassing password validation')
-        setMfaRequired(true)
-        setOtpExpiresIn(5)
-        setCountdown(300)
-        setLoading(false)
-        return
-      }
-
-      // Always use local validation with MOCK_USERS (no backend call)
-      console.log('Using local authentication with file data')
-      const user = MOCK_USERS.find(u => u.email === email && u.password === password)
+      console.log('🔐 Calling backend login API...')
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/login`,
+        { email, password, language },
+        { timeout: 8000 }
+      )
       
-      if (!user) {
-        setError('Invalid email or password')
-        setLoading(false)
-        return
+      if (response.data.requiresMFA) {
+        console.log('✅ Backend MFA required - waiting for OTP')
+        setMfaRequired(true)
+        setOtpExpiresIn(response.data.expiresIn || 5)
+        setCountdown((response.data.expiresIn || 5) * 60)
+        setError('')
+      } else {
+        setError('Unexpected response from backend')
       }
-
-      // Show MFA screen (skip actual OTP sending)
-      setMfaRequired(true)
-      setOtpExpiresIn(5)
-      setCountdown(300)
-      setError('')
       setLoading(false)
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.')
+      console.error('❌ Backend auth failed:', err.message)
+      setError('Cannot connect to authentication server: ' + (err.message || 'Unknown error'))
       setLoading(false)
     }
   }
@@ -87,36 +79,28 @@ export default function Login({ onLogin }) {
     setLoading(true)
 
     try {
-      // Demo Mode - Skip OTP validation and login directly
-      if (demoMode) {
-        console.log('Demo mode enabled - bypassing OTP validation')
-        const demoUser = MOCK_USERS.find(u => u.email === email) || MOCK_USERS[0]
-        onLogin('demo-token-' + Date.now(), demoUser.customer)
-        setLoading(false)
-        return
-      }
-
-      // Always accept "000000" as valid OTP (no backend call)
-      console.log('Using local OTP validation - accepting 000000')
+      console.log('🔐 Verifying OTP with backend...')
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/verify-otp`,
+        { email, otp, language },
+        { timeout: 8000 }
+      )
       
-      if (otp !== '000000') {
-        setError('Invalid OTP. Please use 000000')
-        setLoading(false)
-        return
+      if (response.data.success && response.data.token && response.data.customer) {
+        console.log('✅ OTP verified, got JWT token from backend')
+        console.log('📝 Token:', response.data.token.substring(0, 30) + '...')
+        onLogin(response.data.token, response.data.customer)
+      } else {
+        setError('Invalid response from backend')
       }
-
-      // Find user and login
-      const user = MOCK_USERS.find(u => u.email === email)
-      if (!user) {
-        setError('User not found')
-        setLoading(false)
-        return
-      }
-
-      onLogin('local-token-' + Date.now(), user.customer)
       setLoading(false)
     } catch (err) {
-      setError(err.message || 'Verification failed. Please try again.')
+      console.error('❌ OTP verification failed:', err.message)
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error)
+      } else {
+        setError('Cannot verify OTP: ' + (err.message || 'Unknown error'))
+      }
       setLoading(false)
     }
   }
