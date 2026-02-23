@@ -110,7 +110,7 @@ export default function Chatbot({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 10000  // 10 seconds for OpenAI API processing + backend logic
+            timeout: 30000  // 30 seconds for OpenAI API processing + backend logic
           }
         )
         console.log('  ✅ SUCCESS - Got real OpenAI response')
@@ -284,7 +284,7 @@ export default function Chatbot({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 15000
           }
         )
       } catch (backendError) {
@@ -360,7 +360,7 @@ export default function Chatbot({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 30000
           }
         )
       } catch (backendError) {

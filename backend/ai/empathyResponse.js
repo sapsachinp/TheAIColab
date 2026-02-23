@@ -1,11 +1,30 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 
+// Load env first
 dotenv.config();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'demo-key'
-});
+/**
+ * Lazily create and cache the OpenAI client
+ */
+let _openaiClient = null;
+function getOpenAIClient() {
+  if (!_openaiClient) {
+    _openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+      baseURL: process.env.OPENAI_BASE_URL || undefined
+    });
+  }
+  return _openaiClient;
+}
+
+function isOpenAIEnabled() {
+  return process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key';
+}
+
+function getModel() {
+  return process.env.OPENAI_MODEL || 'gpt-5';
+}
 
 /**
  * Empathy Response Module
@@ -22,7 +41,7 @@ class EmpathyResponse {
       const { query, intent, context, language } = params;
 
       // For demo: use template-based responses as fallback
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key') {
+      if (!isOpenAIEnabled()) {
         console.log('⚠️  Using template-based response (no real OpenAI API key)');
         return this.templateResponse(intent, context, language);
       }
@@ -41,19 +60,19 @@ Customer Context: ${context}`;
 Intent: ${intent}
 Language: ${language || 'en'}
 
-Provide a helpful, empathetic response.`;
+Provide a helpful, empathetic response. Respond with plain text only (no JSON, no markdown formatting).`;
 
-      const response = await openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
+      const response = await getOpenAIClient().chat.completions.create({
+        model: getModel(),
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.7,
-        max_tokens: 300
+        max_tokens: 350
       });
 
-      const message = response.choices[0].message.content;
+      const message = response.choices[0].message.content.trim();
 
       console.log('✅ Generated real empathetic response using OpenAI API');
       return {

@@ -120,7 +120,7 @@ export default function RequestForm({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 8000
+            timeout: 30000
           }
         )
         console.log('  ✅ SUCCESS - Got AI explanation')
@@ -134,6 +134,7 @@ export default function RequestForm({ customer }) {
         }}
       }
 
+      // Backend returns { success: true, explanation: { title, description, commonReasons, nextSteps, aiInsights, customerContext } }
       setRequestExplanation(response.data.explanation)
     } catch (err) {
       console.error('Error getting explanation:', err)
@@ -238,7 +239,7 @@ export default function RequestForm({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 30000
           }
         )
       } catch (backendError) {
@@ -248,6 +249,7 @@ export default function RequestForm({ customer }) {
         response = { data: mockResponse }
       }
 
+      // Backend returns { success: true, guidance: { ... } }
       setGuidance(response.data.guidance)
     } catch (err) {
       console.error('Error getting guidance:', err)
@@ -275,7 +277,7 @@ export default function RequestForm({ customer }) {
           },
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 5000
+            timeout: 15000
           }
         )
       } catch (backendError) {

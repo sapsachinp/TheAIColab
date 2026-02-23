@@ -1,11 +1,30 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 
+// Load env first
 dotenv.config();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'demo-key'
-});
+/**
+ * Lazily create and cache the OpenAI client
+ */
+let _openaiClient = null;
+function getOpenAIClient() {
+  if (!_openaiClient) {
+    _openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+      baseURL: process.env.OPENAI_BASE_URL || undefined
+    });
+  }
+  return _openaiClient;
+}
+
+function isOpenAIEnabled() {
+  return process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key';
+}
+
+function getModel() {
+  return process.env.OPENAI_MODEL || 'gpt-5';
+}
 
 /**
  * Intent Detection Module
@@ -35,7 +54,7 @@ class IntentDetection {
   async classify(type, details) {
     try {
       // For demo: use rule-based classification as fallback
-      if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key') {
+      if (!isOpenAIEnabled()) {
         console.log('⚠️  Using rule-based intent classification (no real OpenAI API key)');
         return this.ruleBasedClassify(type, details);
       }
@@ -46,19 +65,22 @@ class IntentDetection {
 Request Type: ${type}
 Details: ${details}
 
-Respond with JSON: {"category": "category_name", "confidence": 0.0-1.0, "reasoning": "brief explanation"}`;
+Respond ONLY with valid JSON (no markdown, no code fences): {"category": "category_name", "confidence": 0.0-1.0, "reasoning": "brief explanation"}`;
 
-      const response = await openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
+      const response = await getOpenAIClient().chat.completions.create({
+        model: getModel(),
         messages: [
-          { role: 'system', content: 'You are an AI intent classifier for DEWA customer service.' },
+          { role: 'system', content: 'You are an AI intent classifier for DEWA customer service. Always respond with valid JSON only.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.3,
         max_tokens: 150
       });
 
-      const result = JSON.parse(response.choices[0].message.content);
+      const rawContent = response.choices[0].message.content.trim();
+      // Strip markdown code fences if present
+      const cleanContent = rawContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+      const result = JSON.parse(cleanContent);
       console.log('✅ Intent classified using real OpenAI API:', result.category, `(confidence: ${result.confidence})`);
       return {
         category: result.category,

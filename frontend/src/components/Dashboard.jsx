@@ -59,7 +59,7 @@ export default function Dashboard() {
           `${API_BASE_URL}/api/backoffice/analytics`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 8000  // 8 seconds for real analytics with AI-driven insights
+            timeout: 30000  // 30 seconds for real analytics with AI-driven insights
           }
         )
         console.log('✅ Loaded REAL analytics from OpenAI-powered backend')

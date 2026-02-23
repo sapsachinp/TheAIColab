@@ -37,7 +37,7 @@ export default function CustomerSummary({ customer }) {
           `${API_BASE_URL}/api/customer/summary/${customer.id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            timeout: 8000  // 8 seconds for OpenAI API processing
+            timeout: 30000  // 30 seconds for OpenAI API processing
           }
         )
         console.log('  ✅ SUCCESS - Got real AI data from backend')

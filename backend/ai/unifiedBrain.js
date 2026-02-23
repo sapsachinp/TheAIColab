@@ -7,22 +7,37 @@ import billPredictor from './billPredictor.js';
 import * as sentimentAnalysis from './sentimentAnalysis.js';
 import * as knowledgeGraph from './knowledgeGraph.js';
 
+// Load env first before any client initialization
 dotenv.config();
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'demo-key'
-});
+/**
+ * Lazily create and cache the OpenAI client so it always uses
+ * the env values that were loaded by dotenv.config()
+ */
+let _openaiClient = null;
+function getOpenAIClient() {
+  if (!_openaiClient) {
+    _openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+      baseURL: process.env.OPENAI_BASE_URL || undefined
+    });
+  }
+  return _openaiClient;
+}
+
+function isOpenAIEnabled() {
+  return process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key';
+}
+
+function getModel() {
+  return process.env.OPENAI_MODEL || 'gpt-5';
+}
 
 /**
  * Unified AI Brain - Central orchestration layer
  * Coordinates all AI modules: intent, empathy, proactive, prediction
  */
 class UnifiedBrain {
-  constructor() {
-    this.openai = openai;
-  }
-
   /**
    * Get AI-powered customer insights
    * @param {Object} customer - Customer data
@@ -35,7 +50,7 @@ class UnifiedBrain {
       
       // Use OpenAI to generate intelligent predictions and insights
       let aiPredictions = null;
-      if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key') {
+      if (isOpenAIEnabled()) {
         try {
           console.log('🔄 Calling OpenAI API for customer insights analysis...');
           const prompt = `Analyze this DEWA customer's energy consumption data and provide insights:
@@ -56,14 +71,14 @@ Please provide:
 3. 3 personalized energy-saving recommendations
 4. Risk assessment (low/medium/high) for bill shock
 
-Format as JSON with keys: predictedBill, confidence, trendExplanation, recommendations (array), riskLevel`;
+Respond ONLY with valid JSON (no markdown, no code fences). Use these exact keys: predictedBill (number), confidence (number 0-1), trendExplanation (string), recommendations (array of strings), riskLevel (string: low/medium/high)`;
 
-          const completion = await this.openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+          const completion = await getOpenAIClient().chat.completions.create({
+            model: getModel(),
             messages: [
               {
                 role: "system",
-                content: "You are an AI energy analyst for DEWA (Dubai Electricity & Water Authority). Provide accurate, data-driven insights to help customers manage their consumption."
+                content: "You are an AI energy analyst for DEWA (Dubai Electricity & Water Authority). Provide accurate, data-driven insights. Always respond with valid JSON only."
               },
               {
                 role: "user",
@@ -71,13 +86,14 @@ Format as JSON with keys: predictedBill, confidence, trendExplanation, recommend
               }
             ],
             temperature: 0.7,
-            max_tokens: 500
+            max_tokens: 600
           });
 
-          const aiResponse = completion.choices[0].message.content;
-          // Try to parse JSON response
+          const aiResponse = completion.choices[0].message.content.trim();
+          // Strip markdown code fences if present
+          const cleanResponse = aiResponse.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
           try {
-            aiPredictions = JSON.parse(aiResponse);
+            aiPredictions = JSON.parse(cleanResponse);
             console.log('✅ Received real OpenAI insights:', {
               predictedBill: aiPredictions.predictedBill,
               confidence: aiPredictions.confidence,
@@ -163,7 +179,7 @@ Format as JSON with keys: predictedBill, confidence, trendExplanation, recommend
       
       // Generate AI-powered insights using OpenAI if available
       let aiAnalysis = null;
-      if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key') {
+      if (isOpenAIEnabled()) {
         try {
           const prompt = `Analyze this DEWA customer's support request and provide insights:
 
@@ -179,20 +195,14 @@ Request Details:
 - Type: ${requestType}
 - Details: ${requestDetails || 'Not provided'}
 
-Please provide:
-1. Situation analysis - explain the customer's current situation based on their data
-2. Root cause - likely reasons for this request
-3. 3 actionable recommendations specific to this customer
-4. Priority level (low/medium/high/urgent)
+Respond ONLY with valid JSON (no markdown, no code fences). Use these exact keys: situationAnalysis (string), rootCause (string), recommendations (array of 3 strings), priority (string: low/medium/high/urgent), customerImpact (string)`;
 
-Format as JSON with keys: situationAnalysis, rootCause, recommendations (array of strings), priority, customerImpact`;
-
-          const completion = await this.openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+          const completion = await getOpenAIClient().chat.completions.create({
+            model: getModel(),
             messages: [
               {
                 role: "system",
-                content: "You are an AI support analyst for DEWA helping customers understand their utility situation and providing personalized guidance."
+                content: "You are an AI support analyst for DEWA helping customers understand their utility situation. Always respond with valid JSON only."
               },
               {
                 role: "user",
@@ -200,15 +210,16 @@ Format as JSON with keys: situationAnalysis, rootCause, recommendations (array o
               }
             ],
             temperature: 0.7,
-            max_tokens: 600
+            max_tokens: 700
           });
 
-          const aiResponse = completion.choices[0].message.content;
+          const aiResponse = completion.choices[0].message.content.trim();
+          const cleanResponse = aiResponse.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
           try {
-            aiAnalysis = JSON.parse(aiResponse);
+            aiAnalysis = JSON.parse(cleanResponse);
+            console.log('✅ OpenAI analyzeRequest succeeded');
           } catch (parseError) {
             console.warn('⚠️  OpenAI response not valid JSON in analyzeRequest:', parseError.message);
-            // Use text response if JSON parsing fails
             aiAnalysis = {
               situationAnalysis: aiResponse,
               rootCause: 'See analysis above',
@@ -596,7 +607,7 @@ Format as JSON with keys: situationAnalysis, rootCause, recommendations (array o
 
       // Try to enhance with OpenAI insights
       let aiInsights = null;
-      if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'demo-key') {
+      if (isOpenAIEnabled()) {
         try {
           const prompt = `Generate a personalized insight for a DEWA customer selecting this request type:
 
@@ -609,10 +620,10 @@ Customer Profile:
 
 Request Type: ${requestType.replace('_', ' ')}
 
-Provide a brief (2-3 sentences) personalized insight for THIS SPECIFIC CUSTOMER about why they might be experiencing this issue, based on their data. Be empathetic and actionable.`;
+Provide a brief (2-3 sentences) personalized insight for THIS SPECIFIC CUSTOMER about why they might be experiencing this issue, based on their data. Be empathetic and actionable. Respond with plain text only, no JSON.`;
 
-          const completion = await this.openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+          const completion = await getOpenAIClient().chat.completions.create({
+            model: getModel(),
             messages: [
               {
                 role: "system",
@@ -624,7 +635,7 @@ Provide a brief (2-3 sentences) personalized insight for THIS SPECIFIC CUSTOMER 
               }
             ],
             temperature: 0.7,
-            max_tokens: 150
+            max_tokens: 200
           });
 
           aiInsights = completion.choices[0].message.content.trim();
